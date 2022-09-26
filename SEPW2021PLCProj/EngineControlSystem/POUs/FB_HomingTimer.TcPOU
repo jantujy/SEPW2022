@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_HomingTimer" Id="{6daf19c6-1dde-4928-a084-d0c6759bf0ba}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HomingTimer
+VAR_OUTPUT
+	Done : BOOL;
+END_VAR
+VAR
+	i			: LINT := 0;
+	LoopCount	: LINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+Done := False;
+
+i := i + 1;
+
+IF i >= LoopCount THEN
+	Done := TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{e2775d28-756d-4453-b544-630b65051fee}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	
+	LoopsToRun	: LINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+THIS^.i := 0;
+THIS^.LoopCount := LoopsToRun;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HomingTimer">
+      <LineId Id="21" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_HomingTimer.FB_init">
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

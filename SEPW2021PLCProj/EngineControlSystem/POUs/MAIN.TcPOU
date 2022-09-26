@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="MAIN" Id="{bdfa0062-539d-4679-9449-b5aad24542ad}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	Inputs AT %I*			: CANRXQUEUESTRUCT_N_1;
+	Outputs AT %Q*			: CANTXQUEUESTRUCT_N_1;
+	
+	
+	// Outputit ohjausmallille
+	w_ref_prep				: LREAL := 0;
+	w_ref AT %Q*			: LREAL;
+	wactual AT %Q*			: LREAL;
+	w_mech AT %Q* 			: LREAL;
+	i_a, i_b, i_c AT %Q*	: LREAL;
+	tc_theta AT %Q*			: LREAL;
+	theta_mech AT %Q* 		: LREAL;
+	control_enable AT %Q*	: LREAL := 0;
+	
+	// Inputit ohjausmallista
+	alpha_U, beta_U AT %I*	: LREAL;
+	
+	EL3702Ch1_In AT %I*		: INT;
+	EL3702Ch2_In AT %I*		: INT;
+	EL3702Ch3_In AT %I*		: INT;
+	EL5101_Counter AT %I*	: UINT;
+	EL5101_CounterSet AT %Q*: UINT;
+	EL5101_CounterSetWORD AT %Q* : WORD;
+	
+	CurrentMeasurement_V	: REAL; // Current measurement as voltage
+	Current_I				: REAL; // Current as A
+	MotorSpeed				: REAL;
+	Theta_out,Theta_el_out,omega_out : REAL;
+	
+	THETA 					: REAL;
+	THETA_EL 				: REAL;
+	OMEGA					: REAL;
+	Va,Vb					: REAL;
+	
+	sControlEnable			: BOOL := FALSE;
+	startHoming				: BOOL := FALSE;
+	OpenLoop 				: BOOL := FALSE;
+	homingDone 				: BOOL := FALSE;
+	homingVa				: REAL := 0.5;
+	homingVb				: REAL := 0;
+	
+	fbCAN_MessageHandler	: FB_CANMessageHandler();
+	fbEncoder				: FB_Encoder();
+	fbHomingTimer			: FB_HomingTimer(LoopsToRun := 50000);
+	
+	theta_OL				: LREAL := 0;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//control_enable := 0;
+IF sControlEnable THEN
+	control_enable := 1;
+ELSE	
+	control_enable := 0;
+END_IF 
+
+w_ref := w_ref_prep*2;
+
+i_a := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch1_In));
+i_b := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch2_In));
+i_c := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch3_In));
+
+Measurements.COUNTER_VALUE := EL5101_Counter;
+
+
+//IF ( Measurements.COUNTER_VALUE > Constants.PULSES_PER_REV ) AND (EL5101_CounterSetWORD.2 = FALSE) THEN
+//	EL5101_CounterSet := Constants.PULSES_PER_REV - (16#FFFF - Measurements.COUNTER_VALUE);
+//	EL5101_CounterSetWORD.2 := TRUE;
+//ELSE
+//	EL5101_CounterSetWORD.2 := FALSE;
+//END_IF
+
+fbEncoder(	THETA_EL => tc_theta,
+			THETA_MECH => theta_mech,
+			OMEGA_EL => wactual,
+			OMEGA_MECH => w_mech);
+			
+Va := LREAL_TO_REAL(alpha_U);
+Vb := LREAL_TO_REAL(beta_U);
+
+IF startHoming THEN
+	control_enable := 0;
+	//fbHomingTimer(DONE => homingDone);
+	fbCAN_MessageHandler(	Inputs := Inputs, 
+						Outputs := Outputs, 
+						fVoltage_A := homingVa,
+						fVoltage_B := homingVb);
+	Measurements.COUNTER_OFFSET := Measurements.COUNTER_VALUE;
+	homingDone := TRUE;
+END_IF
+
+IF (NOT startHoming) AND homingDone THEN
+	Measurements.homing_done_encoder := 1;
+	
+	IF sControlEnable = TRUE THEN
+		fbCAN_MessageHandler(	Inputs := Inputs, 
+							Outputs := Outputs, 
+							fVoltage_A := Va,
+							fVoltage_B := Vb);
+	ELSIF OpenLoop = TRUE THEN
+		fbCAN_MessageHandler(	Inputs := Inputs, 
+							Outputs := Outputs, 
+							fVoltage_A := SIN(theta_OL),
+							fVoltage_B := COS(theta_OL));
+		
+		theta_OL := theta_OL + 2*PI/2500;
+		IF theta_OL > 2*PI THEN
+			theta_OL := 0;
+		END_IF
+	END_IF
+	
+	
+ELSE
+(*	fbCAN_MessageHandler(	Inputs := Inputs, 
+						Outputs := Outputs, 
+						fVoltage_A := homingVa,
+						fVoltage_B := homingVb);
+	EL5101_CounterSet := 0;*)
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="30" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="391" Count="2" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="266" Count="1" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="325" Count="0" />
+      <LineId Id="335" Count="1" />
+      <LineId Id="326" Count="0" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="77" Count="1" />
+      <LineId Id="459" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="274" Count="2" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="448" Count="1" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="509" Count="1" />
+      <LineId Id="513" Count="2" />
+      <LineId Id="511" Count="1" />
+      <LineId Id="521" Count="2" />
+      <LineId Id="519" Count="0" />
+      <LineId Id="529" Count="4" />
+      <LineId Id="518" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="516" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="165" Count="2" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="164" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="9206b000-f314-4ae1-a2c2-32a0f65b2653">FB_ENCODER</Type>
+      <From>FB_Encoder</From>
+      <To>FB_Encoder_Old1</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="8599c327-0fbf-4c54-91df-cae898324e04">FB_ENCODER_OLD</Type>
+      <From>FB_Encoder_Old</From>
+      <To>FB_Encoder_Old2</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="6012c401-bcaa-4387-b79e-99c6207e5ca8">FB_ENCODER_V3_1</Type>
+      <From>FB_ENCODER_V3_1</From>
+      <To>FB_Encoder</To>
+    </RenamedType>
+  </Renames>
+</Refactors>
