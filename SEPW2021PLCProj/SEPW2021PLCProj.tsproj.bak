@@ -1,27 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.28">
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.32">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{119729AD-8099-482A-9FEE-7DE2E19D43CE}">TctModuleCallByType</Name>
 			<BitSize>32</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000009}">DINT</BaseType>
 			<EnumInfo>
-				<Text>
-					<![CDATA[CyclicTask]]>
-				</Text>
+				<Text><![CDATA[CyclicTask]]></Text>
 				<Enum>0</Enum>
-				<Comment>
-					<![CDATA[Add to the specified cyclic callers.]]>
-				</Comment>
+				<Comment><![CDATA[Add to the specified cyclic callers.]]></Comment>
 			</EnumInfo>
 			<EnumInfo>
-				<Text>
-					<![CDATA[Module]]>
-				</Text>
+				<Text><![CDATA[Module]]></Text>
 				<Enum>1</Enum>
-				<Comment>
-					<![CDATA[Don't add to cyclic callers. The module can be called from other TwinCAT modules (e. g. a PLC).]]>
-				</Comment>
+				<Comment><![CDATA[Don't add to cyclic callers. The module can be called from other TwinCAT modules (e. g. a PLC).]]></Comment>
 			</EnumInfo>
 		</DataType>
 		<DataType>
@@ -29,31 +21,19 @@
 			<BitSize>32</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000009}">DINT</BaseType>
 			<EnumInfo>
-				<Text>
-					<![CDATA[IoAtTaskBegin]]>
-				</Text>
+				<Text><![CDATA[IoAtTaskBegin]]></Text>
 				<Enum>0</Enum>
-				<Comment>
-					<![CDATA[Input mapping -> Output mapping -> State update -> Output update -> External mode processing -> ADS access]]>
-				</Comment>
+				<Comment><![CDATA[Input mapping -> Output mapping -> State update -> Output update -> External mode processing -> ADS access]]></Comment>
 			</EnumInfo>
 			<EnumInfo>
-				<Text>
-					<![CDATA[StateUpdateAfterOutputMapping]]>
-				</Text>
+				<Text><![CDATA[StateUpdateAfterOutputMapping]]></Text>
 				<Enum>1</Enum>
-				<Comment>
-					<![CDATA[Input mapping -> Output update -> Output mapping -> State update -> External mode processing -> ADS access]]>
-				</Comment>
+				<Comment><![CDATA[Input mapping -> Output update -> Output mapping -> State update -> External mode processing -> ADS access]]></Comment>
 			</EnumInfo>
 			<EnumInfo>
-				<Text>
-					<![CDATA[StateUpdateBeforeOutputUpdate]]>
-				</Text>
+				<Text><![CDATA[StateUpdateBeforeOutputUpdate]]></Text>
 				<Enum>2</Enum>
-				<Comment>
-					<![CDATA[Input mapping -> State update -> Output update -> Output mapping -> External mode processing -> ADS access]]>
-				</Comment>
+				<Comment><![CDATA[Input mapping -> State update -> Output update -> Output mapping -> External mode processing -> ADS access]]></Comment>
 			</EnumInfo>
 		</DataType>
 		<DataType>
@@ -61,31 +41,19 @@
 			<BitSize>32</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000009}">DINT</BaseType>
 			<EnumInfo>
-				<Text>
-					<![CDATA[RequireMatchingTaskCycleTime]]>
-				</Text>
+				<Text><![CDATA[RequireMatchingTaskCycleTime]]></Text>
 				<Enum>0</Enum>
-				<Comment>
-					<![CDATA[Don't accept task cycle times other than the Simulink step sizes.]]>
-				</Comment>
+				<Comment><![CDATA[Don't accept task cycle times other than the Simulink step sizes.]]></Comment>
 			</EnumInfo>
 			<EnumInfo>
-				<Text>
-					<![CDATA[UseTaskCycleTime]]>
-				</Text>
+				<Text><![CDATA[UseTaskCycleTime]]></Text>
 				<Enum>1</Enum>
-				<Comment>
-					<![CDATA[Adapt the Smulink step sizes to the task cycle times.]]>
-				</Comment>
+				<Comment><![CDATA[Adapt the Smulink step sizes to the task cycle times.]]></Comment>
 			</EnumInfo>
 			<EnumInfo>
-				<Text>
-					<![CDATA[UseModelStepSize]]>
-				</Text>
+				<Text><![CDATA[UseModelStepSize]]></Text>
 				<Enum>2</Enum>
-				<Comment>
-					<![CDATA[Keep the Smulink step sizes, independent of the callers cycle time.]]>
-				</Comment>
+				<Comment><![CDATA[Keep the Smulink step sizes, independent of the callers cycle time.]]></Comment>
 			</EnumInfo>
 		</DataType>
 		<DataType>
@@ -715,7 +683,7 @@
 		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ff000000000000ff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff000000ff00ffff00ff000000ff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ff000000000000ff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1004">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{8753FEAA-A14C-49E5-8227-BE8A25A0273D}" TargetNetId="192.168.4.38.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{8753FEAA-A14C-49E5-8227-BE8A25A0273D}" TargetNetId="192.168.4.38.1.1" ShowHideConfigurations="#x106">
 		<System>
 			<Settings>
 				<Cpu BaseTime="1000"/>
@@ -2165,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{26579312-1FB3-E2A1-7296-8991F23F217E}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2176,9 +2144,7 @@
 						</Var>
 						<Var>
 							<Name>MAIN.alpha_U</Name>
-							<Comment>
-								<![CDATA[ Inputit ohjausmallista]]>
-							</Comment>
+							<Comment><![CDATA[ Inputit ohjausmallista]]></Comment>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
@@ -2202,7 +2168,7 @@
 							<Type>UINT</Type>
 						</Var>
 					</Vars>
-					<Vars VarGrpType="2">
+					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>MAIN.Outputs</Name>
@@ -2260,6 +2226,17 @@
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010030</OTCID>
+							</ManualConfig>
+							<Priority>1</Priority>
+							<CycleTime>100000</CycleTime>
+						</Context>
+					</Contexts>
 					<TaskPouOids>
 						<TaskPouOid Prio="1" OTCID="#x08502001"/>
 					</TaskPouOids>
@@ -2267,11 +2244,11 @@
 			</Project>
 		</Plc>
 		<Io>
-			<Device DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="192.168.4.38.3.1" RemoteName="Device 2 (EtherCAT)" Id="2">
+			<Device Id="2" DevType="111" DevFlags="#x0003" AmsPort="28674" AmsNetId="192.168.4.38.3.1" RemoteName="Device 2 (EtherCAT)" InfoImageId="2">
 				<Name>Device 2 (EtherCAT)</Name>
 				<AddressInfo>
 					<Pnp>
-						<DeviceDesc/>
+						<DeviceDesc></DeviceDesc>
 						<DeviceName>\DEVICE\{3C1EA807-775E-41D6-8193-9B83F7620F98}</DeviceName>
 						<DeviceData>00010540bf49</DeviceData>
 					</Pnp>
@@ -2279,11 +2256,11 @@
 				<Image Id="1" AddrType="9" ImageType="3">
 					<Name>Image</Name>
 				</Image>
-				<Box BoxType="9099" Id="8">
+				<Box Id="8" BoxType="9099">
 					<Name>Term 8 (EK1100)</Name>
 					<ImageId>1001</ImageId>
 					<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x044c2c52" RevisionNo="#x00120000" PortPhys="305" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1100 EtherCAT Coupler (2A E-Bus)" Desc="EK1100" PortABoxInfo="#x00ffffff"/>
-					<Box BoxType="9099" BoxFlags="#x00000020" Id="9">
+					<Box Id="9" BoxType="9099" BoxFlags="#x00000020">
 						<Name>Term 9 (EL5101-0010)</Name>
 						<ImageId>1002</ImageId>
 						<EtherCAT SlaveType="2" PdiType="#x0c05" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x13ed3052" RevisionNo="#x0013000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5101-0010 1Ch. Inc. Encoder 5V (20 million increments/s)" Desc="EL5101-0010" PortABoxInfo="#x01000008">
@@ -2481,7 +2458,7 @@
 							<CoeProfile ProfileNo="33493897"/>
 						</EtherCAT>
 					</Box>
-					<Box BoxType="9099" Id="10">
+					<Box Id="10" BoxType="9099">
 						<Name>Term 10 (EL3702)</Name>
 						<ImageId>33</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0106" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0e763052" RevisionNo="#x00030000" InfoDataDcTimes="true" PortPhys="51" PdoOvsFactor="1" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3702 2Ch. Ana. Input +/-10V, DIFF, Oversample" Desc="EL3702" PortABoxInfo="#x01000009">
@@ -2491,10 +2468,10 @@
 							<Fmmu>0000000000000000001000010100000002000000060000000000000000000000</Fmmu>
 							<Fmmu>0000000000000000001400010100000002000000060000000100000000000000</Fmmu>
 							<Fmmu>0000000000000000980900010000000002000000060000000200000000000000</Fmmu>
-							<SuName/>
-							<SuName/>
-							<SuName/>
-							<SuName/>
+							<SuName></SuName>
+							<SuName></SuName>
+							<SuName></SuName>
+							<SuName></SuName>
 							<DcData>3007000000000000f0d8ffff00000000ffffffff000100000000000000000000</DcData>
 							<DcMode>446353796e630000000000000000000032204368616e6e656c730000000000000000000000000000000000000000000000000000f0d8ffff00000000ffff3007ffff0400000000000000010a1027000000000000000000000000000000000000001b0000001a0001011b0100801a0101</DcMode>
 							<DcMode>446353796e632d31000000000000000031204368616e6e656c000000000000000000000000000000000000000000000000000000f0d8ffff00000000ffff3007ffff0200000000000000010a8813000000000000000000000000000000000000001b0000001a0001</DcMode>
@@ -3515,7 +3492,7 @@
 							</Pdo>
 						</EtherCAT>
 					</Box>
-					<Box BoxType="9099" Id="11">
+					<Box Id="11" BoxType="9099">
 						<Name>Term 11 (EL3702)</Name>
 						<ImageId>33</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0106" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x0e763052" RevisionNo="#x00030000" InfoDataDcTimes="true" PortPhys="51" PdoOvsFactor="1" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3702 2Ch. Ana. Input +/-10V, DIFF, Oversample" Desc="EL3702" PortABoxInfo="#x0100000a">
@@ -3525,10 +3502,10 @@
 							<Fmmu>0000000000000000001000010100000002000000060000000000000000000000</Fmmu>
 							<Fmmu>0000000000000000001400010100000002000000060000000100000000000000</Fmmu>
 							<Fmmu>0000000000000000980900010000000002000000060000000200000000000000</Fmmu>
-							<SuName/>
-							<SuName/>
-							<SuName/>
-							<SuName/>
+							<SuName></SuName>
+							<SuName></SuName>
+							<SuName></SuName>
+							<SuName></SuName>
 							<DcData>3007000000000000f0d8ffff00000000ffffffff000100000000000000000000</DcData>
 							<DcMode>446353796e630000000000000000000032204368616e6e656c730000000000000000000000000000000000000000000000000000f0d8ffff00000000ffff3007ffff0400000000000000010a1027000000000000000000000000000000000000001b0000001a0001011b0100801a0101</DcMode>
 							<DcMode>446353796e632d31000000000000000031204368616e6e656c000000000000000000000000000000000000000000000000000000f0d8ffff00000000ffff3007ffff0200000000000000010a8813000000000000000000000000000000000000001b0000001a0001</DcMode>
@@ -4549,10 +4526,10 @@
 							</Pdo>
 						</EtherCAT>
 					</Box>
-					<Box BoxType="9094" BoxFlags="#x00000020" Id="12">
+					<Box Id="12" BoxType="9094" BoxFlags="#x00000020">
 						<Name>Term 11 (EL6751)</Name>
 						<ImageId>1003</ImageId>
-						<EtherCAT SlaveType="5" AdsServerAddress="c0a8042604010000" PdiType="#x0408" ExecIo="true" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000002" ProductCode="#x1a5f3052" RevisionNo="#x00160000" InfoDataAddr="true" InfoDataNetId="true" OwnAddrExtern="true" TimeoutStateChange1="5000" TimeoutStateChange3="10000" TimeoutStateChange4="1000" TimeoutMailbox2="2000" GenerateOwnNetId="true" InitializeOwnNetId="true" PortPhys="51" MaxSlotCount="126" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6751 CANopen Master" Desc="EL6751" PortABoxInfo="#x0100000b">
+						<EtherCAT SlaveType="5" AdsServerAddress="c0a8042604010000" FixedAdsServerNetId="true" PdiType="#x0408" ExecIo="true" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000002" ProductCode="#x1a5f3052" RevisionNo="#x00160000" InfoDataAddr="true" InfoDataNetId="true" OwnAddrExtern="true" TimeoutStateChange1="5000" TimeoutStateChange3="10000" TimeoutStateChange4="1000" TimeoutMailbox2="2000" GenerateOwnNetId="true" InitializeOwnNetId="true" PortPhys="51" MaxSlotCount="126" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6751 CANopen Master" Desc="EL6751" PortABoxInfo="#x0100000b">
 							<SyncMan>001000042600010001000000500000040004001026010000</SyncMan>
 							<SyncMan>001400042200010002000000500000040004001422010000</SyncMan>
 							<SyncMan>001810002600010003000000000000000000001826010000</SyncMan>
@@ -4608,7 +4585,7 @@
 							</Slot>
 						</EtherCAT>
 					</Box>
-					<Box BoxType="9099" Id="13">
+					<Box Id="13" BoxType="9099">
 						<Name>Term 12 (EL9011)</Name>
 						<ImageId>1004</ImageId>
 						<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 End Terminal" Desc="EL9011" PortABoxInfo="#x0100000c"/>
@@ -4616,7 +4593,7 @@
 				</Box>
 				<EtherCAT FreerunCycle="1" DcSyncMode="3"/>
 			</Device>
-			<Device DevType="11" AmsPort="28673" Id="1">
+			<Device Id="1" DevType="11" AmsPort="28673">
 				<Name>Device 1 (COM Port)</Name>
 				<AddressInfo>
 					<Pci>
@@ -4631,9 +4608,9 @@
 				<Image Id="3" AddrType="1" ImageType="1">
 					<Name>Image</Name>
 				</Image>
-				<Serial Baud="38400" Parity="1" StopBit="1" RsType="1" WaitTimeToShutdown="60" BufSize="4096" DataBit="8" Is16950="true" ComPortNo="99" Timeout="300"/>
+				<Serial Baud="38400" Parity="1" StopBit="1" RsType="1" UPSDisableSysShutdown="true" WaitTimeToShutdown="60" BufSize="4096" DataBit="8" Is16950="true" FifoSize="16" ComPortNo="99" Timeout="300"/>
 			</Device>
-			<Device DevType="87" AmsPort="28675" AmsNetId="192.168.4.38.4.1" RemoteName="Device 3 (EL6751)" Id="3">
+			<Device Id="3" DevType="87" AmsPort="28675" AmsNetId="192.168.4.38.4.1" RemoteName="Device 3 (EL6751)">
 				<Name>Device 3 (EL6751)</Name>
 				<AddressInfo>
 					<Ecat>
@@ -4644,7 +4621,7 @@
 				<Image Id="4" AddrType="4" ImageType="3">
 					<Name>Image</Name>
 				</Image>
-				<Box BoxType="5051" Id="7">
+				<Box Id="7" BoxType="5051">
 					<Name>Zybo (CAN Interface)</Name>
 					<ImageId>3</ImageId>
 					<Vars VarGrpType="1">
@@ -4655,8 +4632,7 @@
 						</Var>
 						<Var BoxStateVariable="true">
 							<Name>NodeState</Name>
-							<Comment>
-								<![CDATA[Master- and Slave-Mode:
+							<Comment><![CDATA[Master- and Slave-Mode:
    0 = No error
 
 Master-Mode:
@@ -4679,17 +4655,14 @@ Slave-Mode:
  128 = Node is Operational but not all RxPDOs were received
  129 = Node is Pre-Operational
  130 = Node is Stopped
-]]>
-							</Comment>
+]]></Comment>
 							<Type>USINT</Type>
 							<BitOffs>128</BitOffs>
 						</Var>
 						<Var BoxStateVariable="true">
 							<Name>DiagFlag</Name>
-							<Comment>
-								<![CDATA[0 = Diagnosis Data unchanged
-1 = Diagnosis Data changed, use ADS-Read to get the data]]>
-							</Comment>
+							<Comment><![CDATA[0 = Diagnosis Data unchanged
+1 = Diagnosis Data changed, use ADS-Read to get the data]]></Comment>
 							<Type>BIT</Type>
 							<BitOffs>177</BitOffs>
 						</Var>
@@ -4708,7 +4681,7 @@ Slave-Mode:
 						</CanQueue>
 					</CanOpen>
 				</Box>
-				<CanOpen CurrentDBCPath="">
+				<CanOpen>
 					<Fcxxxx>
 						<DevSettings BusyIntEnabled="true" DisableSlots="true" NetId="c0a804260401" EquiCycleTime="1000" FifoSize="5" CycleDivider="1"/>
 						<DevParameter CycleTime="1000" InputShift="10"/>
@@ -4717,11 +4690,53 @@ Slave-Mode:
 					<BusParameter NodeId="127" CobIdSync="128" TxPdoWindowSize="5" CycleDivider="1" MaxLoPrioQueue="100" Bt1="20" TimerTick="2" BusActiveDivider="125" TxBusyTime="500" TimeIntegral="1000" WdTimeoutInCycleTime="25000"/>
 				</CanOpen>
 			</Device>
+			<Device Id="4" DevType="120">
+				<Name>EL5101 (CX-BK)</Name>
+				<DevData>0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</DevData>
+				<Image Id="5" AddrType="5" ImageType="3" SizeIn="4" SizeOut="4">
+					<Name>Image</Name>
+				</Image>
+				<Box Id="1" BoxType="9703" AmsPort="28928">
+					<Name>Box 1 (CX-BK)</Name>
+					<ImageId>5</ImageId>
+					<Vars VarGrpType="1">
+						<Name>Inputs</Name>
+						<Var>
+							<Name>State</Name>
+							<Comment><![CDATA[Bit 0 = K-Bus Err
+Bit 1 = Terminal State Err
+Bit 2 = Process Data Length Err
+Bit 7 = K-Bus invalid
+Bit 8 = No valid Inputs
+Bit 9 = K-Bus Input Update busy
+Bit 10 = K-Bus Output Update busy
+Bit 11 = Watchdog Err
+Bit 15 = Acyc. Function atcive (e.g. K-Bus Reset)
+]]></Comment>
+							<Type>UINT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>Outputs</Name>
+						<Var>
+							<Name>Ctrl</Name>
+							<Type>UINT</Type>
+						</Var>
+					</Vars>
+					<BusCoupler ComplexTermSupport="true" NewHardware="true">
+						<Term Id="1" TermType="#x2332" Fieldbus="6">
+							<Name>End Term (KL9010)</Name>
+							<ImageId>32</ImageId>
+						</Term>
+					</BusCoupler>
+					<CxBk/>
+				</Box>
+			</Device>
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500820000101}" Id="#x02030030"/>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500820000101}" Id="#x02030030"/>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500840000403}" Id="#x02030010"/>
 		<OwnerA Name="TIPC^EngineControlSystem^EngineControlSystem Instance">
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 10 (EL3702)">
