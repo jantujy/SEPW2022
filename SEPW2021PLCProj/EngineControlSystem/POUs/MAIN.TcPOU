@@ -7,7 +7,7 @@ VAR
 	Outputs AT %Q*			: CANTXQUEUESTRUCT_N_1;
 	
 	
-	// Outputit ohjausmallille
+	// To controller
 	w_ref_prep				: LREAL := 0;
 	w_ref AT %Q*			: LREAL;
 	wactual AT %Q*			: LREAL;
@@ -17,7 +17,7 @@ VAR
 	theta_mech AT %Q* 		: LREAL;
 	control_enable AT %Q*	: LREAL := 0;
 	
-	// Inputit ohjausmallista
+	// From controller
 	alpha_U, beta_U AT %I*	: LREAL;
 	
 	EL3702Ch1_In AT %I*		: INT;
@@ -67,7 +67,7 @@ i_a := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch1_In));
 i_b := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch2_In));
 i_c := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch3_In));
 
-Measurements.COUNTER_VALUE := EL5101_Counter;
+GVL_Measurements.COUNTER_VALUE := EL5101_Counter;
 
 
 //IF ( Measurements.COUNTER_VALUE > Constants.PULSES_PER_REV ) AND (EL5101_CounterSetWORD.2 = FALSE) THEN
@@ -92,12 +92,12 @@ IF startHoming THEN
 						Outputs := Outputs, 
 						fVoltage_A := homingVa,
 						fVoltage_B := homingVb);
-	Measurements.COUNTER_OFFSET := Measurements.COUNTER_VALUE;
+	GVL_Measurements.COUNTER_OFFSET := GVL_Measurements.COUNTER_VALUE;
 	homingDone := TRUE;
 END_IF
 
 IF (NOT startHoming) AND homingDone THEN
-	Measurements.homing_done_encoder := 1;
+	GVL_Measurements.homing_done_encoder := 1;
 	
 	IF sControlEnable = TRUE THEN
 		fbCAN_MessageHandler(	Inputs := Inputs, 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="F_VoltageToWord" Id="{e4bd409d-b938-4115-b171-c7d2808493ca}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_VoltageToWord : WORD
 VAR_INPUT

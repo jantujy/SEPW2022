@@ -16,5 +16,15 @@
       <From>FB_ENCODER_V3_1</From>
       <To>FB_Encoder</To>
     </RenamedType>
+    <RenamedType>
+      <Type guid="17cf1aae-7cee-4ad3-a519-7db4e6e69ad2">CONSTANTS</Type>
+      <From>Constants</From>
+      <To>GVL_Constants</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="38dda99e-6470-445e-a7b1-ebc3b159f7ec">MEASUREMENTS</Type>
+      <From>Measurements</From>
+      <To>GVL_Measurements</To>
+    </RenamedType>
   </Renames>
 </Refactors>

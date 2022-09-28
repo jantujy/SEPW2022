@@ -9,15 +9,16 @@ VAR_OUTPUT
 	OMEGA_MECH 			: REAL;
 END_VAR
 VAR
-	COUNTER_MAX 		: UINT := 16383;
-	COUNTER_INV_MAX 	: UINT := 65535;
-	COUNTER_TEMP 		: UINT;
+	LATCH				: UINT;
+	COUNTER		 		: UINT;
 	SAMPLE_TIME			: REAL := 100E-6;
    	THETA_MECH_PREV 	: REAL := 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[COUNTER := GVL_Measurements.COUNTER_VALUE * 4;
+
+(*
 // If counter is maximum UINT value (or over COUNTER_MAX), rotation is reversed.
 IF Measurements.COUNTER_VALUE > COUNTER_MAX THEN
 	COUNTER_TEMP := COUNTER_MAX + (Measurements.COUNTER_VALUE - COUNTER_INV_MAX);
@@ -46,9 +47,11 @@ END_IF
 OMEGA_MECH := (THETA_MECH-THETA_MECH_PREV)/SAMPLE_TIME;
 THETA_MECH_PREV := THETA_MECH;
 
-OMEGA_EL := OMEGA_MECH*2;]]></ST>
+OMEGA_EL := OMEGA_MECH*2;
+*)]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
+      <LineId Id="74" Count="1" />
       <LineId Id="50" Count="0" />
       <LineId Id="22" Count="1" />
       <LineId Id="26" Count="0" />
@@ -74,6 +77,7 @@ OMEGA_EL := OMEGA_MECH*2;]]></ST>
       <LineId Id="49" Count="0" />
       <LineId Id="53" Count="0" />
       <LineId Id="52" Count="0" />
+      <LineId Id="76" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="F_CounterNegativeOverflow" Id="{92b9c22e-91a6-4220-928a-ec1733f656db}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_CounterNegativeOverflow : BOOL
 VAR_INPUT

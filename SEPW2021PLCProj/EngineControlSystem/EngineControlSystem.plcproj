@@ -21,18 +21,15 @@
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\Constants.TcGVL">
+    <Compile Include="GVLs\GVL_Constants.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\Measurements.TcGVL">
+    <Compile Include="GVLs\GVL_Measurements.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\CAN_Example.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FB_CANMessageHandler.TcPOU">
@@ -44,28 +41,10 @@
     <Compile Include="POUs\FB_HomingTimer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\F_AnalogIntToVoltage.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\F_CounterNegativeOverflow.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\F_Homing.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\F_MechToEl.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\F_VoltageToCurrentConvert.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\F_VoltageToWord.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\F_GenerateCANMessage.TcPOU">
+    <Compile Include="POUs\OLD\CAN_Example.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\OLD\FB_Encoder_Old1.TcPOU">
@@ -83,6 +62,27 @@
     <Compile Include="POUs\OLD\FB_ENCODER_V3.TcPOU">
       <SubType>Code</SubType>
       <ExcludeFromBuild>false</ExcludeFromBuild>
+    </Compile>
+    <Compile Include="POUs\OLD\F_AnalogIntToVoltage.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\OLD\F_CounterNegativeOverflow.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\OLD\F_GenerateCANMessage.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\OLD\F_Homing.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\OLD\F_MechToEl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\OLD\F_VoltageToCurrentConvert.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\OLD\F_VoltageToWord.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">
       <SubType>Code</SubType>
