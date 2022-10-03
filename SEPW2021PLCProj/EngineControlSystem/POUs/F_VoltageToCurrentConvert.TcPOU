@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="F_VoltageToCurrentConvert" Id="{4c259c44-8604-4beb-9049-3b9f090500ab}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_VoltageToCurrentConvert : REAL
+VAR_INPUT
+	VoltageValue 	: REAL;
+END_VAR
+VAR
+	Current			: REAL;
+	Gain			: REAL := 3.1809;
+	Offset			: REAL := -7.933;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Current := VoltageValue*Gain + Offset;
+
+F_VoltageToCurrentConvert := Current;]]></ST>
+    </Implementation>
+    <LineIds Name="F_VoltageToCurrentConvert">
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

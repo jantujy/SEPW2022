@@ -1,38 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="FB_HomingTimer" Id="{6daf19c6-1dde-4928-a084-d0c6759bf0ba}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_HomingTimer
 VAR_OUTPUT
-	Done : BOOL;
+	bDone : BOOL;
 END_VAR
 VAR
 	i			: LINT := 0;
-	LoopCount	: LINT;
+	uLoopCount	: LINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-Done := False;
+bDone := FALSE;
 
 i := i + 1;
 
-IF i >= LoopCount THEN
-	Done := TRUE;
+IF i >= uLoopCount THEN
+	bDone := TRUE;
 END_IF]]></ST>
     </Implementation>
     <Method Name="FB_init" Id="{e2775d28-756d-4453-b544-630b65051fee}">
       <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
-	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	bInitRetains	: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode		: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
 	
-	LoopsToRun	: LINT;
+	uLoopsToRun		: LINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 THIS^.i := 0;
-THIS^.LoopCount := LoopsToRun;]]></ST>
+THIS^.uLoopCount := uLoopsToRun;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_HomingTimer">

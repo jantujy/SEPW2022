@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="ST_Inputs" Id="{39d9a656-d2dc-42a1-b92e-092053ce1266}">
+    <Declaration><![CDATA[TYPE ST_Inputs :
+STRUCT
+	// CAN
+	Inputs 				AT %I*			: CANRXQUEUESTRUCT_N_1;
+	
+	// IO
+	uEL3702Ch1_In 		AT %I*	: INT;
+	uEL3702Ch2_In 		AT %I*	: INT;
+	uEL3702Ch3_In 		AT %I*	: INT;
+	uEL5101_Counter 	AT %I*	: UINT;
+	
+	// From controller
+	fAlpha_U, fBeta_U	AT %I*	: LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

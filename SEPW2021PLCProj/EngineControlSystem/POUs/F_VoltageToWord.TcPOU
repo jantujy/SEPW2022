@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="F_VoltageToWord" Id="{e4bd409d-b938-4115-b171-c7d2808493ca}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_VoltageToWord : WORD
+VAR_INPUT
+	Voltage_In			: REAL; // Voltage input
+END_VAR
+VAR
+	VoltageMultiplier	: REAL;
+	MaxWordValue		: REAL := 16#FFFF;
+	Voltage_High_Value 	: REAL := 0.866;
+	Voltage_Low_Value	: REAL := -0.866;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Check that voltage value is between min and max value.
+IF Voltage_In > Voltage_High_Value THEN
+	Voltage_In := Voltage_High_Value;
+ELSIF Voltage_In < Voltage_Low_Value THEN
+	Voltage_In := Voltage_Low_Value;
+END_IF
+
+VoltageMultiplier := (Voltage_In-Voltage_Low_Value)/(Voltage_High_Value-Voltage_Low_Value);
+
+F_VoltageToWord := UINT_TO_WORD(REAL_TO_UINT(VoltageMultiplier*MaxWordValue));]]></ST>
+    </Implementation>
+    <LineIds Name="F_VoltageToWord">
+      <LineId Id="18" Count="2" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

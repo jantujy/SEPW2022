@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="F_GenerateCANMessage" Id="{c87cbcc0-6d70-40a7-8682-e5c1285f5a4e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_GenerateCANMessage : CANQUEUE
+VAR_INPUT
+	cobID	: UINT;
+	V_a		: WORD;
+	V_b		: WORD;
+END_VAR
+VAR
+	i,j 		: UINT;
+	Tempdata	: USINT;
+	V_DWORD		: WORD;
+	tempMessage : CANMESSAGE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// WIP CAN Message writing.
+(*
+	Viestiin tulee Va ja Vb (ilmeisesti). Yksi CAN Frame on käytössä näille kahdelle muuttujalle.
+	CANQUEUE Objekti on yksi CAN viesti, joka lähetetään COB ID:seen ja se sisältää 8 kpl UINT muuttujia, jotka varmaankin kirjoitetaan sarjassa, josta muodostuu se 64 bittinen CAN Frame.
+	Ei kyllä ole kamalasti ideaa että missä järjestyksessä ne kirjoitetaan sinne. Eli pitäisi varmaankin testata. 
+	Koodi on nyt silleensä että oletetaan että kirjoitetaan 7 -> 0. Jolloin 7:n data yksikön merkitsevin bitti on koko framen merkisevin
+	Vastaavasti 0:n viimeinen bitti on koko framen viimeinen kirjoitettava bitti.
+*)
+
+
+F_GenerateCANMessage.cobId := cobID;
+
+V_DWORD := V_a;
+FOR j := 0 TO 1 DO // First part of frame reserved for V_a
+	CASE j OF // ST is dumb language and doesnt allow looping for bit access.
+		1:
+			Tempdata.0 := V_DWORD.0;
+			Tempdata.1 := V_DWORD.1;
+			Tempdata.2 := V_DWORD.2;
+			Tempdata.3 := V_DWORD.3;
+			Tempdata.4 := V_DWORD.4;
+			Tempdata.5 := V_DWORD.5;
+			Tempdata.6 := V_DWORD.6;
+			Tempdata.7 := V_DWORD.7;
+			
+		0:
+			Tempdata.0 := V_DWORD.8;
+			Tempdata.1 := V_DWORD.9;
+			Tempdata.2 := V_DWORD.10;
+			Tempdata.3 := V_DWORD.11;
+			Tempdata.4 := V_DWORD.12;
+			Tempdata.5 := V_DWORD.13;
+			Tempdata.6 := V_DWORD.14;
+			Tempdata.7 := V_DWORD.15;
+	ELSE
+		RETURN;
+	END_CASE
+	F_GenerateCANMessage.data[j] := Tempdata;
+END_FOR
+
+V_DWORD := V_b;
+FOR j := 2 TO 3 DO // Second part is reserved for V_b
+	CASE j OF // ST is dumb language and doesnt allow looping for bit access.
+		3:
+			Tempdata.0 := V_DWORD.0;
+			Tempdata.1 := V_DWORD.1;
+			Tempdata.2 := V_DWORD.2;
+			Tempdata.3 := V_DWORD.3;
+			Tempdata.4 := V_DWORD.4;
+			Tempdata.5 := V_DWORD.5;
+			Tempdata.6 := V_DWORD.6;
+			Tempdata.7 := V_DWORD.7;
+			
+		2:
+			Tempdata.0 := V_DWORD.8;
+			Tempdata.1 := V_DWORD.9;
+			Tempdata.2 := V_DWORD.10;
+			Tempdata.3 := V_DWORD.11;
+			Tempdata.4 := V_DWORD.12;
+			Tempdata.5 := V_DWORD.13;
+			Tempdata.6 := V_DWORD.14;
+			Tempdata.7 := V_DWORD.15;
+	ELSE
+		RETURN;
+	END_CASE
+	F_GenerateCANMessage.data[j] := Tempdata;
+END_FOR
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_GenerateCANMessage">
+      <LineId Id="50" Count="2" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="92" Count="6" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="102" Count="6" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="229" Count="17" />
+      <LineId Id="166" Count="2" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -9,7 +9,4 @@
     <AssemblyName>MyApplication</AssemblyName>
     <Name>Measurements</Name>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="C:\Data\SEPW21\Solution_9_2_22_copy\SEPW2021BechoffPLC-main\SEPW2021PLCProj\Measurements\M12.tcscopex" />
-  </ItemGroup>
 </Project>

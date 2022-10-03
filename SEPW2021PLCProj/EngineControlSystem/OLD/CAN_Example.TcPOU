@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="CAN_Example" Id="{1daa8427-a4bf-4d32-a0f1-8e66064ac444}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CAN_Example
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	fPhase1_Uptime	: DINT;
+	fPhase2_Uptime	: DINT;
+	fPhase3_Uptime	: DINT;
+	fPhase1_Offset	: DINT;
+	fPhase2_Offset	: DINT;
+	fPhase3_Offset	: DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+Example codes from some beckhoff PDF
+
+Sample code: Sending messages from the PLC
+if Outputs.TxCounter = Inputs.TxCounter then
+          for i=0 to NumberOfMessagesToSend do
+                  Outputs.TxMessage[i] = MessageToSend[i];
+          End_for
+          Outputs.NoOfTxMessages = NumberOfMessagesToSend;
+          Outputs.TxCounter := Outputs.TxCounter + 1;
+end_if
+
+
+Sample code: Receiving messages from the PLC
+if Outputs.RxCounter <> Inputs.RxCounter then
+          for I := 0 to (Inputs.NoOfRxMessages-1) do
+                   MessageReceived[i] := Inputs.RxMessage [i];
+          End_for
+          Outputs.RxCounter := Outputs.RxCounter+1;
+end_if
+
+*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="CAN_Example">
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="7" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="5" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

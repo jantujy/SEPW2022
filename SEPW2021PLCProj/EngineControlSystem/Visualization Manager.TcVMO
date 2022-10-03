@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <VisuManager Name="Visualization Manager" Id="{73910190-3355-4e3c-b930-aa3537457cf3}">
     <XmlArchive>
       <Data>
@@ -49,10 +49,10 @@
             <d n="FbMethods" t="CaseInsensitiveHashtable" ckt="String" cvt="Guid">
               <v>FB_Init</v>
               <v>7bea63a8-b3b3-4b2e-af76-1b151c1b351c</v>
-              <v>FB_Reinit</v>
-              <v>6d8eb950-fdea-4ccc-95d7-10d9245d84da</v>
               <v>FB_Exit</v>
               <v>f0c43966-aac6-4436-9249-27a43a989693</v>
+              <v>FB_Reinit</v>
+              <v>6d8eb950-fdea-4ccc-95d7-10d9245d84da</v>
             </d>
             <v n="FbName">"NotImportant"</v>
             <v n="FbGuid">{a4d3fb45-5adf-42a6-95e3-c9a57facb820}</v>
@@ -61,8 +61,8 @@
             <o n="AvailableKeys" t="DeviceBasedHotkeysProvider">
               <v n="Modifiers">7</v>
               <v n="DevType">4096</v>
-              <v n="DevId">"1002 0001"</v>
-              <v n="DevVersion">"1.0.0.5"</v>
+              <v n="DevId">"1002 0004"</v>
+              <v n="DevVersion">"1.0.0.6"</v>
               <v n="BaseProvider">{cb73a13e-6ccc-4bc6-8859-f5aa98bb116b}</v>
               <l n="Keys" t="ArrayList" cet="DeviceBasedHotkeyItem">
                 <o>
