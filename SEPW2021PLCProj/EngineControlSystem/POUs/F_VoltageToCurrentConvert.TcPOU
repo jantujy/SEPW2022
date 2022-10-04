@@ -12,16 +12,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-
-
-Current := VoltageValue*Gain + Offset;
+      <ST><![CDATA[Current := VoltageValue*Gain + Offset;
 
 F_VoltageToCurrentConvert := Current;]]></ST>
     </Implementation>
     <LineIds Name="F_VoltageToCurrentConvert">
-      <LineId Id="15" Count="1" />
-      <LineId Id="11" Count="1" />
+      <LineId Id="12" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>

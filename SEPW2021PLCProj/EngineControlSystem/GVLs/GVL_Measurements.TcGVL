@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
-  <GVL Name="Measurements" Id="{38dda99e-6470-445e-a7b1-ebc3b159f7ec}">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <GVL Name="GVL_Measurements" Id="{38dda99e-6470-445e-a7b1-ebc3b159f7ec}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	COUNTER_VALUE		: UINT;
 	COUNTER_OFFSET    	: UINT := 0;
-	homing_done_encoder: BOOL;
+	homing_done_encoder	: BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

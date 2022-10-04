@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="ST_Outputs" Id="{d85eb51e-193b-4311-b97f-7f95096a0309}">
+    <Declaration><![CDATA[TYPE ST_Outputs :
+STRUCT
+	// To controller
+	fWref 					AT %Q*				: LREAL;
+	fWel	 				AT %Q*				: LREAL;
+	fWmech					AT %Q* 				: LREAL;
+	fIa, fIb, fIc 			AT %Q*				: LREAL;
+	fThetaEl				AT %Q*				: LREAL;
+	fThetaMech 				AT %Q* 				: LREAL;
+	fControlEnable 			AT %Q*				: LREAL;
+	// CAN
+	Outputs					AT %Q*				: CANTXQUEUESTRUCT_N_1;
+	// Encoder
+	uEL5101_SetCounterValue AT %Q*				: UINT;
+	bEL5101_SetCounter		AT %Q*				: BIT;
+	bEL5101_EnabledLatch	AT %Q*				: BIT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

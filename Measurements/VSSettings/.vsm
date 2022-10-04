@@ -2,12 +2,5 @@
   <Title>Measurements</Title>
   <Expanded>False</Expanded>
   <FileName></FileName>
-  <Children>
-    <Node>
-      <Title>M12.tcscopex</Title>
-      <Expanded>False</Expanded>
-      <FileName></FileName>
-      <Children />
-    </Node>
-  </Children>
+  <Children />
 </Node>

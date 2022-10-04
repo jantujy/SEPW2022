@@ -3,77 +3,30 @@
   <POU Name="FB_Encoder" Id="{6012c401-bcaa-4387-b79e-99c6207e5ca8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Encoder
 VAR_OUTPUT
-	THETA_EL 			: REAL;
-	THETA_MECH 			: REAL;
-	OMEGA_EL 			: REAL;
-	OMEGA_MECH 			: REAL;
+	fThetaMech			: LREAL;
+	fOmegaMech			: LREAL;
 END_VAR
 VAR
-	COUNTER_MAX 		: UINT := 16383;
-	COUNTER_INV_MAX 	: UINT := 65535;
-	COUNTER_TEMP 		: UINT;
-	SAMPLE_TIME			: REAL := 100E-6;
-   	THETA_MECH_PREV 	: REAL := 0;
+	u16bitMax			: UINT := 65535;
+	uCounter	 		: UINT;
+	uCounterRaw			: UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-// If counter is maximum UINT value (or over COUNTER_MAX), rotation is reversed.
-IF Measurements.COUNTER_VALUE > COUNTER_MAX THEN
-	COUNTER_TEMP := COUNTER_MAX + (Measurements.COUNTER_VALUE - COUNTER_INV_MAX);
-ELSE
-	COUNTER_TEMP := Measurements.COUNTER_VALUE;
-END_IF
+      <ST><![CDATA[uCounter := MAIN.stInputs.uEL5101_Counter;
+uCounter := uCounterRaw * 4;
 
-IF Measurements.COUNTER_VALUE >= Measurements.COUNTER_OFFSET THEN
-	COUNTER_TEMP := COUNTER_TEMP - Measurements.COUNTER_OFFSET;
-ELSIF Measurements.COUNTER_VALUE < Measurements.COUNTER_OFFSET THEN
-	COUNTER_TEMP := COUNTER_TEMP + Measurements.COUNTER_OFFSET;
-END_IF
+fThetaMech := UINT_TO_LREAL( uCounter / u16bitMax ) * 2 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
 
-IF COUNTER_TEMP > COUNTER_MAX THEN
-	COUNTER_TEMP := COUNTER_MAX;
-END_IF
-
-THETA_MECH := LREAL_TO_REAL(2*PI*UINT_TO_LREAL(COUNTER_TEMP)/UINT_TO_LREAL(COUNTER_MAX));
-
-IF THETA_MECH*2 > 2*PI THEN
-	THETA_EL := LREAL_TO_REAL(THETA_MECH*2 - 2*PI);
-ELSE
-	THETA_EL := THETA_MECH*2;
-END_IF
-
-OMEGA_MECH := (THETA_MECH-THETA_MECH_PREV)/SAMPLE_TIME;
-THETA_MECH_PREV := THETA_MECH;
-
-OMEGA_EL := OMEGA_MECH*2;]]></ST>
+fOmegaMech := 2 * PI * MAIN.stInputs.uEL5101_Frequency;]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
-      <LineId Id="50" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="54" Count="1" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="58" Count="1" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="41" Count="1" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="52" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="102" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

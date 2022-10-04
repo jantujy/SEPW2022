@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_Encoder_Old1" Id="{9206b000-f314-4ae1-a2c2-32a0f65b2653}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Encoder_Old1
+VAR_OUTPUT
+	THETA 					: REAL;
+	THETA_EL 				: REAL;
+	OMEGA					: REAL;
+END_VAR
+VAR
+	OMEGA_raw				: REAL;
+	OMEGA_filtered			: REAL;
+	Omega_prev				: REAL;
+	THETA_rads				: REAL;
+	THETA_prev_rads			: REAL;
+	
+	THETA_PREV 				: REAL 	:= 0;
+	T_S 					: REAL 	:= 0.0001;
+	OVERFLOW_SET 			: BOOL 	:= FALSE;
+	UNDERFLOW_SET 			: BOOL 	:= FALSE;
+
+	UNDERFLOW_VALUE 		: UINT 	:= 0;
+	OVERFLOW_VALUE 			: UINT 	:= 4096*4; //65535;
+	DOWNCOUNT_VALUE 		: UINT 	:= 1003;
+	UPCOUNT_VALUE 			: UINT 	:= DOWNCOUNT_VALUE + (Constants.PULSES_PER_REV - 1);
+	
+	INIT_DONE 				: BOOL 	:= FALSE;
+	
+	COUNTER_VALUE			: UINT;
+	I 						: INT 	:= 0;
+	COUNTER_VALUE_PREV 		: UINT 	:= Measurements.COUNTER_VALUE;
+	COUNTER_OUT 			: UINT 	:= 0;
+	FIRSTCYCLE_DONE 		: BOOL 	:= FALSE;
+	CLOCKWISE				: BOOL;
+	COUNTERCLOCKWISE		: BOOL;
+	PLUSONEPULSE 			: BOOL;
+	PLUSTWOPULSES 			: BOOL;
+	PLUSTHREEPULSES 		: BOOL;
+	
+	THETA_EST_TOT 			: REAL;
+	THETA_EST_TOT_OLD		: REAL	:=0.0;
+	THETA_ERR_FAST			: REAL;
+	THETA_ERR_HYS			: REAL	:= 0.1;	//0.1
+	OMEGA_FAST 				: REAL;
+	OMEGA_EST_TOT 			: REAL;
+	Ts_EST 					: REAL 	:=1E-4;	//1E-2
+	THETA_EST_FAST 			: REAL;
+	THETA_EST_FAST_OLD 		: REAL;
+	GAIN_EST 				: REAL 	:=20; 	//1
+	
+	THETA_n 				: REAL; 
+	DELTA_THETA_n0 			: REAL :=0.0;
+	DELTA_THETA_n1 			: REAL :=0.0; 
+	DELTA_THETA 			: REAL;
+	temp					: REAL; 
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// counter resetointi. kirjoita arvo enc control compact/control/set counter value ja rising edge /control/set counter
+
+
+COUNTER_VALUE := Measurements.COUNTER_VALUE;
+
+//Init procedure
+IF FIRSTCYCLE_DONE = FALSE THEN
+(*	STARTING_VALUE := COUNTER_VALUE;
+	UP_VALUE := STARTING_VALUE + PULSES_PER_REV;
+	DOWN_VALUE := STARTING_VALUE - PULSES_PER_REV;
+*)	FIRSTCYCLE_DONE := TRUE;
+END_IF
+
+//End of init procedure
+
+//Rotation direction estimation											//ADDED ROTATION  DIRECTION ESTIMATION - FEDOR POLUNIN 07 06 17
+
+	IF (COUNTER_VALUE < COUNTER_VALUE_PREV AND COUNTER_VALUE <= (UNDERFLOW_VALUE + 2) AND COUNTER_VALUE_PREV >= (OVERFLOW_VALUE - 2)) THEN
+		CLOCKWISE := TRUE;
+		COUNTERCLOCKWISE := FALSE;
+	ELSIF (COUNTER_VALUE > COUNTER_VALUE_PREV AND COUNTER_VALUE_PREV <= (UNDERFLOW_VALUE + 2) AND COUNTER_VALUE >= (OVERFLOW_VALUE - 2)) THEN
+		COUNTERCLOCKWISE := TRUE;
+		CLOCKWISE := FALSE;
+	ELSIF 	(COUNTER_VALUE > COUNTER_VALUE_PREV AND COUNTER_VALUE <> OVERFLOW_VALUE) THEN 
+		CLOCKWISE := TRUE;
+		COUNTERCLOCKWISE := FALSE;
+	ELSIF 	(COUNTER_VALUE < COUNTER_VALUE_PREV AND COUNTER_VALUE <> UNDERFLOW_VALUE) THEN
+		COUNTERCLOCKWISE := TRUE;
+		CLOCKWISE := FALSE;
+	END_IF
+
+//COUNTERCLOCKWISE := TRUE;
+//CLOCKWISE := TRUE;
+
+//End of Rotation direction estimation 
+
+// Counter value conversion from 0..65535 to DOWNCOUNT_VALUE .. UPCOUNT_VALUE (1003..2002)  		//up to 1200 rpm both directions, no pulse loss w/o load Fedor Polunin 26 06 2017
+
+IF (COUNTER_VALUE <= (UNDERFLOW_VALUE + 2) AND COUNTER_VALUE_PREV >= (OVERFLOW_VALUE - 2)) THEN
+	COUNTER_OUT := COUNTER_OUT + (COUNTER_VALUE-UNDERFLOW_VALUE) + (OVERFLOW_VALUE-COUNTER_VALUE_PREV) + 1; 	//added + 1 because otherwise when COUNTER_VALUE resets from 65535 to 0, COUNTER_OUT does not increment
+ELSIF (COUNTER_VALUE >= (OVERFLOW_VALUE - 2) AND COUNTER_VALUE_PREV <= (UNDERFLOW_VALUE + 2)) THEN
+	COUNTER_OUT := COUNTER_OUT - (OVERFLOW_VALUE-COUNTER_VALUE) - (COUNTER_VALUE_PREV-UNDERFLOW_VALUE) - 1;		//added - 1 because otherwise when COUNTER_VALUE resets from 0 to 65535, COUNTER_OUT does not decrement
+ELSIF (COUNTER_VALUE = COUNTER_VALUE_PREV + 1) OR (COUNTER_VALUE = COUNTER_VALUE_PREV + 2) OR (COUNTER_VALUE = COUNTER_VALUE_PREV + 3)THEN			
+	COUNTER_OUT := COUNTER_OUT + (COUNTER_VALUE - COUNTER_VALUE_PREV); // + 1;
+ELSIF  (COUNTER_VALUE = COUNTER_VALUE_PREV - 1) OR (COUNTER_VALUE = COUNTER_VALUE_PREV - 2) OR (COUNTER_VALUE = COUNTER_VALUE_PREV - 3) THEN; 
+	COUNTER_OUT := COUNTER_OUT - (COUNTER_VALUE_PREV - COUNTER_VALUE);//- 1;
+END_IF
+
+IF COUNTER_OUT < DOWNCOUNT_VALUE THEN
+	COUNTER_OUT := UPCOUNT_VALUE - (DOWNCOUNT_VALUE - COUNTER_OUT) + 1;  // +1 TO PREVENT COUNTER_OUT FROM SETTING UP TO 2001 INSTEAD OF 2002 WHEN DOWNCOUNT_VALUE - COUNTER_OUT = 1
+	UNDERFLOW_SET := TRUE;
+	
+ELSIF COUNTER_OUT > UPCOUNT_VALUE THEN
+	COUNTER_OUT := DOWNCOUNT_VALUE + (COUNTER_OUT - UPCOUNT_VALUE) - 1;  //FOR THE SAME REASON
+	OVERFLOW_SET := TRUE;
+END_IF
+
+(*	
+	//Encoder pulses per program cycle counter														
+IF (COUNTER_VALUE = COUNTER_VALUE_PREV + 1) THEN
+	PLUSONEPULSE := TRUE;
+	PLUSTWOPULSES := FALSE;
+	PLUSTHREEPULSES := FALSE;
+	
+ELSIF (COUNTER_VALUE = COUNTER_VALUE_PREV + 2) THEN
+	PLUSONEPULSE := FALSE;
+	PLUSTWOPULSES := TRUE;
+	PLUSTHREEPULSES := FALSE;
+	
+ELSIF (COUNTER_VALUE = COUNTER_VALUE_PREV + 3) THEN
+	PLUSONEPULSE := FALSE;
+	PLUSTWOPULSES := FALSE;
+	PLUSTHREEPULSES := TRUE;
+END_IF
+*)
+
+COUNTER_VALUE_PREV := COUNTER_VALUE;
+
+//End of counter value conversion 
+
+// Convert to rotor angle theta in degrees
+
+	THETA := 360.0*INT_TO_REAL(UINT_TO_INT(COUNTER_OUT - DOWNCOUNT_VALUE))/(UPCOUNT_VALUE-DOWNCOUNT_VALUE);		// COUNTER_OUT - DOWNCOUNT_VALUE can be negative, requires INT_TO_REAL 
+	IF Measurements.homing_done_encoder THEN
+		THETA := 360.0*INT_TO_REAL(COUNTER_OUT - DOWNCOUNT_VALUE)/(UPCOUNT_VALUE-DOWNCOUNT_VALUE) - Measurements.theta_nolla*180/PI;		// COUNTER_OUT - DOWNCOUNT_VALUE can be negative, requires INT_TO_REAL 
+		IF THETA < 0 THEN
+			temp := Measurements.theta_nolla*180/PI - (360.0*INT_TO_REAL(COUNTER_OUT - DOWNCOUNT_VALUE)/(UPCOUNT_VALUE-DOWNCOUNT_VALUE));
+			THETA := 2*PI - temp;
+		END_IF
+	END_IF
+    THETA_EL := 360.0*INT_TO_REAL(((COUNTER_OUT - DOWNCOUNT_VALUE) MOD 200))/200.0;
+
+//End of conversion to rotor angle theta in degrees
+
+//Angular rotation speed omega estimation (in rad/s)
+I := I+1;
+
+	THETA_rads := THETA/180*PI;
+
+IF I = Constants.SPEED_CALC_Cycle THEN															
+	// Calculate angular speed
+		//raw speed estimation algorithm based on backward Euler differentiation
+	IF OVERFLOW_SET = TRUE AND THETA < 20 THEN								//Fedor Polunin 06.06.17 - added AND THETA < 10 to prevent this from executing if theta hasn't yet changed from 2pi to zero
+		OMEGA := (THETA + (360.0 - THETA_PREV))/(T_S*Constants.SPEED_CALC_Cycle);				
+	ELSIF UNDERFLOW_SET = TRUE AND THETA > 340 THEN							//Fedor Polunin 06.06.17 - added AND THETA < 10 to prevent this from executing if theta hasn't yet changed from zero to 2pi
+		OMEGA := -((360.0-THETA) + THETA_PREV)/(T_S*Constants.SPEED_CALC_Cycle);					
+	ELSE
+		IF CLOCKWISE = TRUE AND THETA_PREV > 180 AND THETA < 180 THEN		//Fedor Polunin 06.06.17 - added                                                                                           (IF THETA_PREV > 180 AND THETA < 180 THEN) BUT NOT VALID if both directions are used (it is to ensure correct omega estimation during THETA 2pi to 0 change)
+			OMEGA := (THETA + (360.0 - THETA_PREV))/(T_S*Constants.SPEED_CALC_Cycle);			//Fedor Polunin 06.06.17 - added OMEGA := (THETA + (360.0 - THETA_PREV))/(T_S*100.0);
+		ELSIF  COUNTERCLOCKWISE = TRUE AND  THETA_PREV < 180 AND THETA > 180 THEN							
+			OMEGA := -((360.0-THETA) + THETA_PREV)/(T_S*Constants.SPEED_CALC_Cycle);			
+		ELSE																//Fedor Polunin 06.06.17 - ELSE use theta and theta_prev without modification:
+			OMEGA := (THETA - THETA_PREV)/(T_S*Constants.SPEED_CALC_Cycle);
+		END_IF
+	END_IF	
+	
+	OMEGA_raw := PI*OMEGA/180.0;
+	
+	//end of raw speed estimation algorithm														
+	
+	//filtered speed estimation algorithm based on ZOH differentiation + filter + output median filtering		
+	IF OVERFLOW_SET = TRUE AND THETA < 20 THEN								//Fedor Polunin 06.06.17 - added AND THETA < 10 to prevent this from executing if theta hasn't yet changed from 2pi to zero
+		DELTA_THETA := (THETA_rads + (2*PI - THETA_prev_rads));		
+	ELSIF UNDERFLOW_SET = TRUE AND THETA > 340 THEN							//Fedor Polunin 06.06.17 - added AND THETA < 10 to prevent this from executing if theta hasn't yet changed from zero to 2pi
+		DELTA_THETA := -((2*PI-THETA_rads ) + THETA_prev_rads);				
+	ELSE
+		IF CLOCKWISE = TRUE AND THETA_PREV > 180 AND THETA < 180 THEN		//Fedor Polunin 06.06.17 - added                                                                                           (IF THETA_PREV > 180 AND THETA < 180 THEN) BUT NOT VALID if both directions are used (it is to ensure correct omega estimation during THETA 2pi to 0 change)
+			DELTA_THETA := (THETA_rads  + (2*PI - THETA_prev_rads));				//Fedor Polunin 06.06.17 - added OMEGA := (THETA + (360.0 - THETA_PREV))/(T_S*100.0);
+		ELSIF  COUNTERCLOCKWISE = TRUE AND  THETA_PREV < 180 AND THETA > 180 THEN							
+			DELTA_THETA := -((2*PI-THETA_rads ) + THETA_prev_rads);	
+		ELSE																//Fedor Polunin 06.06.17 - ELSE use theta and theta_prev without modification:
+			DELTA_THETA := (THETA_rads  - THETA_prev_rads);	
+		END_IF
+	END_IF														
+	
+	DELTA_THETA_n0:=0.5*DELTA_THETA+ 0.5*DELTA_THETA_n1;
+ 	DELTA_THETA_n1:= DELTA_THETA_n0;
+	OMEGA_filtered := DELTA_THETA_n0*33*104.0166/21.23 +  0.189 * Omega_prev ;	
+
+	THETA_PREV := THETA;
+	THETA_prev_rads := THETA_rads;
+	OMEGA_prev:= OMEGA_filtered;
+	
+	//end of filtered speed estimation algorithm
+	
+	I := 0;
+
+	UNDERFLOW_SET := FALSE;
+	OVERFLOW_SET := FALSE;
+	
+	//Speed feedback signal selection
+		//OMEGA:=OMEGA_raw;
+		OMEGA:=OMEGA_filtered;
+		//OMEGA := PI*OMEGA/180.0;
+END_IF;
+	
+	//fast speed estimator part (filtered algorithm above is the slow part) - refer to the paper "A Low-Noise Estimator of Angular Speed and Acceleration from Shaft Encoder Measurements"
+(*
+	THETA_ERR_FAST:=THETA_rads-THETA_EST_TOT;
+	//  limit maybe to much lower than 2pi 
+	
+	IF abs(THETA_ERR_FAST) > THETA_ERR_HYS THEN
+		OMEGA_FAST:= GAIN_EST*THETA_ERR_FAST;
+		
+	ELSE
+ 		OMEGA_FAST:=0;
+
+	END_IF			
+	
+
+	OMEGA_EST_TOT:= OMEGA_filtered+OMEGA_FAST;
+	THETA_EST_FAST := THETA_EST_FAST_OLD+ OMEGA_EST_TOT*Ts_EST;
+	THETA_EST_TOT:=THETA_EST_FAST +0.5*Ts_EST*OMEGA_filtered;
+	REST:=THETA_EST_TOT;
+	
+	 //IF THETA_EST_TOT >= 2*pi 
+	IF THETA_EST_TOT < 0 THEN
+		THETA_EST_TOT_OLD :=THETA_EST_TOT_OLD+2*PI;   
+		THETA_EST_TOT := 2*PI+THETA_EST_TOT;// - (0 - THETA_EST_TOT) ;  
+		THETA_EST_FAST_OLD :=THETA_EST_FAST_OLD+2*PI;   
+		THETA_EST_FAST:= 2*PI+THETA_EST_FAST;
+		
+	//UNDERFLOW_SET := TRUE;
+	
+	ELSIF THETA_EST_TOT > 2*PI THEN
+		THETA_EST_TOT_OLD :=THETA_EST_TOT_OLD-2*PI;   ;
+		THETA_EST_TOT := THETA_EST_TOT-2*PI;// - (0 - THETA_EST_TOT) ;  
+		THETA_EST_FAST_OLD :=0;//THETA_EST_FAST_OLD-2*PI;   
+		THETA_EST_FAST:= 0;//THETA_EST_FAST-2*PI;
+		//THETA_EST_TOT := 0;// + (THETA_EST_TOT - 2*PI) ;  //FOR THE SAME REASON
+	//OVERFLOW_SET := TRUE;
+	END_IF
+		
+		THETA_EST_FAST_OLD:= THETA_EST_FAST;
+		THETA_EST_TOT_OLD := THETA_EST_TOT; 
+	
+	//end of fast speed estimator part
+*)
+
+//End of angular rotation speed estimation
+
+//Rotor angle theta conversion deg -> rad and limitation
+THETA := PI*THETA/180.0;
+THETA_EL := PI*THETA_EL/180.0;
+
+IF THETA < 0 THEN
+	THETA := 0;
+ELSIF
+	THETA > 2*PI THEN
+	THETA := 2*PI;
+END_IF
+
+IF THETA_EL < 0 THEN
+	THETA_EL := 0;
+ELSIF THETA_EL > 2*PI THEN
+	THETA_EL := 2*PI;
+END_IF
+
+//End of rotor angle theta conversion deg->rad and limitation
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Encoder_Old1">
+      <LineId Id="1850" Count="1" />
+      <LineId Id="1796" Count="1" />
+      <LineId Id="1587" Count="78" />
+      <LineId Id="1854" Count="2" />
+      <LineId Id="1910" Count="0" />
+      <LineId Id="1914" Count="0" />
+      <LineId Id="1911" Count="0" />
+      <LineId Id="1909" Count="0" />
+      <LineId Id="1666" Count="62" />
+      <LineId Id="1916" Count="0" />
+      <LineId Id="1729" Count="64" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

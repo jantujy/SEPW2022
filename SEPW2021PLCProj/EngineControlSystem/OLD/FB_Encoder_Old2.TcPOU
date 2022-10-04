@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_Encoder_Old2" Id="{8599c327-0fbf-4c54-91df-cae898324e04}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Encoder_Old2
+VAR CONSTANT
+	nAmountOfSamples				: UINT := 100;
+	fSamplingTime					: REAL := 0.00005; // 50us
+	fCounterToRotationMultiplier	: REAL := 0.25; // Multiplier that transforms the counter value back to rotation.
+	fMaxCounterIncrement			: REAL := 30000;
+END_VAR
+VAR
+	nCounterValue 					: REFERENCE TO UINT; // Reference to value that holds the encoder value
+	aPositionArray					: ARRAY [0..nAmountOfSamples-1] OF UINT; // Hold those positions in array.
+	nValueCount						: UINT; // Rolling number used to store positions
+	nStartCount						: UINT; // Value that holds the current starting value.
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddPosition" Id="{bfdfa381-1a8f-4d46-b2a0-5223fdaf0bb6}">
+      <Declaration><![CDATA[METHOD AddPosition : BOOL
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF nValueCount < nAmountOfSamples THEN // Fill samples
+	aPositionArray[nValueCount] := nCounterValue;
+	nStartCount := 0;
+	nValueCount := nValueCount + 1;
+ELSE // When all samples are full, move starting point forward by one. Write new value.
+	nStartCount := nStartCount + 1;
+	IF nStartCount = nAmountOfSamples THEN
+		nStartCount := 0;
+	END_IF
+	
+	IF nStartCount = 0 THEN
+		aPositionArray[nValueCount] := nCounterValue;
+	ELSE
+		aPositionArray[nStartCount-1] := nCounterValue;
+	END_IF
+	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CalculateSpeed" Id="{e889a12a-0484-4381-a7bf-48d7eb8662ed}">
+      <Declaration><![CDATA[METHOD CalculateSpeed : REAL
+VAR
+	i,j 				: UINT;
+	nUINTMax			: REAL := 16#FFFF;
+	fTempRotationValueS	: REAL;
+	fTempRotationValueE : REAL;
+	fTempTotalRotation	: REAL := 0.0;
+	fTempRotation		: REAL := 0.0;
+	fTimeDuration		: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nValueCount < nAmountOfSamples THEN
+	CalculateSpeed := 0;
+ELSE
+	CalculateSpeed := 0;
+	fTimeDuration := fSamplingTime * nAmountOfSamples;
+	FOR i := 0 TO nAmountOfSamples-1 DO
+		j := nStartCount + i;
+		IF j > nAmountOfSamples-1 THEN
+			j := j-nAmountOfSamples;
+		END_IF
+		fTempRotationValueS	:= UINT_TO_REAL(aPositionArray[j]);
+		
+		IF j = nAmountOfSamples-1 THEN // If j value is at max index.
+			fTempRotationValueE	:= UINT_TO_REAL(aPositionArray[0]);
+		ELSE
+			fTempRotationValueE	:= UINT_TO_REAL(aPositionArray[j+1]);
+		END_IF
+		
+		fTempRotation := fTempRotationValueE - fTempRotationValueS; // The difference between starting point and the end point == Distance rotated between the cycles
+		
+		// Detection for counter overflow
+		IF fTempRotation < -fMaxCounterIncrement THEN
+			fTempRotation := fTempRotationValueE - fTempRotationValueS+nUINTMax;
+		ELSIF fTempRotation > fMaxCounterIncrement THEN
+			fTempRotation := fTempRotationValueE-nUINTMax - fTempRotationValueS;
+		END_IF
+		
+		fTempTotalRotation := fTempTotalRotation + (fTempRotation * fCounterToRotationMultiplier);
+	END_FOR
+	CalculateSpeed := fTempTotalRotation/fTimeDuration; // Total Rotations during the measurement duration
+	CalculateSpeed := CalculateSpeed * (60/fTimeDuration); // Multiplied to Rounds per minute
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{7ad31abf-a99b-421e-9ef2-8dc28b5fe813}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+
+	nCounter_In : REFERENCE TO UINT; // Reference to value that holds the encoder value.
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+nValueCount		:= 0; // There is currently no values in storage.
+nCounterValue REF= nCounter_In; // Set the refence of counter value.]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Encoder_Old2">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Encoder_Old2.AddPosition">
+      <LineId Id="24" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="31" Count="3" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Encoder_Old2.CalculateSpeed">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Encoder_Old2.FB_init">
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

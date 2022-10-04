@@ -3,72 +3,49 @@
   <POU Name="MAIN" Id="{bdfa0062-539d-4679-9449-b5aad24542ad}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	Inputs AT %I*			: CANRXQUEUESTRUCT_N_1;
-	Outputs AT %Q*			: CANTXQUEUESTRUCT_N_1;
+	// To controller
+	fWRefPrep								: LREAL := 0;
 	
+	fThetaOl								: REAL := 0;
 	
-	// Outputit ohjausmallille
-	w_ref_prep				: LREAL := 0;
-	w_ref AT %Q*			: LREAL;
-	wactual AT %Q*			: LREAL;
-	w_mech AT %Q* 			: LREAL;
-	i_a, i_b, i_c AT %Q*	: LREAL;
-	tc_theta AT %Q*			: LREAL;
-	theta_mech AT %Q* 		: LREAL;
-	control_enable AT %Q*	: LREAL := 0;
+	// Encoder
+	bHomingDoneEncoder						: BOOL;
+	uEncoderOffset							: UINT;
 	
-	// Inputit ohjausmallista
-	alpha_U, beta_U AT %I*	: LREAL;
+	fCurrentMeasurement_V					: REAL; // Current measurement as voltage
+	fCurrent_I								: REAL; // Current as A
+	fMotorSpeed								: REAL;
+	fThetaOut, fThetaElOut, fOmegaOut	 	: REAL;
 	
-	EL3702Ch1_In AT %I*		: INT;
-	EL3702Ch2_In AT %I*		: INT;
-	EL3702Ch3_In AT %I*		: INT;
-	EL5101_Counter AT %I*	: UINT;
-	EL5101_CounterSet AT %Q*: UINT;
-	EL5101_CounterSetWORD AT %Q* : WORD;
+	fVa, fVb								: REAL;
 	
-	CurrentMeasurement_V	: REAL; // Current measurement as voltage
-	Current_I				: REAL; // Current as A
-	MotorSpeed				: REAL;
-	Theta_out,Theta_el_out,omega_out : REAL;
+	bControlEnable							: BOOL := FALSE;
+	bstartHoming							: BOOL := FALSE;
+	bOpenLoop 								: BOOL := FALSE;
+	bHomingDone 							: BOOL := FALSE;
+	fHomingVa								: REAL := 0.5;
+	fHomingVb								: REAL := 0;
 	
-	THETA 					: REAL;
-	THETA_EL 				: REAL;
-	OMEGA					: REAL;
-	Va,Vb					: REAL;
+	fbCAN_MessageHandler					: FB_CANMessageHandler();
+	fbEncoder								: FB_Encoder();
 	
-	sControlEnable			: BOOL := FALSE;
-	startHoming				: BOOL := FALSE;
-	OpenLoop 				: BOOL := FALSE;
-	homingDone 				: BOOL := FALSE;
-	homingVa				: REAL := 0.5;
-	homingVb				: REAL := 0;
-	
-	fbCAN_MessageHandler	: FB_CANMessageHandler();
-	fbEncoder				: FB_Encoder();
-	fbHomingTimer			: FB_HomingTimer(LoopsToRun := 50000);
-	
-	theta_OL				: LREAL := 0;
-END_VAR
-
-]]></Declaration>
+	stInputs								: ST_Inputs;
+	stOutputs								: ST_Outputs;
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 //control_enable := 0;
-IF sControlEnable THEN
-	control_enable := 1;
+IF bControlEnable THEN
+	stOutputs.fControlEnable := 1;
 ELSE	
-	control_enable := 0;
+	stOutputs.fControlEnable := 0;
 END_IF 
 
-w_ref := w_ref_prep*2;
+stOutputs.fWref := fWRefPrep * 2;
 
-i_a := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch1_In));
-i_b := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch2_In));
-i_c := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(EL3702Ch3_In));
-
-Measurements.COUNTER_VALUE := EL5101_Counter;
-
+stOutputs.fIa := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702Ch1_In));
+stOutputs.fIb := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702Ch2_In));
+stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702Ch3_In));
 
 //IF ( Measurements.COUNTER_VALUE > Constants.PULSES_PER_REV ) AND (EL5101_CounterSetWORD.2 = FALSE) THEN
 //	EL5101_CounterSet := Constants.PULSES_PER_REV - (16#FFFF - Measurements.COUNTER_VALUE);
@@ -77,48 +54,54 @@ Measurements.COUNTER_VALUE := EL5101_Counter;
 //	EL5101_CounterSetWORD.2 := FALSE;
 //END_IF
 
-fbEncoder(	THETA_EL => tc_theta,
-			THETA_MECH => theta_mech,
-			OMEGA_EL => wactual,
-			OMEGA_MECH => w_mech);
+fbEncoder(	fThetaMech => stOutputs.fThetaMech,
+			fOmegaMech => stOutputs.fWmech
+);
 			
-Va := LREAL_TO_REAL(alpha_U);
-Vb := LREAL_TO_REAL(beta_U);
+fVa := LREAL_TO_REAL(stInputs.fAlpha_U);
+fVb := LREAL_TO_REAL(stInputs.fBeta_U);
 
-IF startHoming THEN
-	control_enable := 0;
+IF bStartHoming AND ( NOT bHomingDone ) THEN
+	stOutputs.fControlEnable := 0;
 	//fbHomingTimer(DONE => homingDone);
-	fbCAN_MessageHandler(	Inputs := Inputs, 
-						Outputs := Outputs, 
-						fVoltage_A := homingVa,
-						fVoltage_B := homingVb);
-	Measurements.COUNTER_OFFSET := Measurements.COUNTER_VALUE;
-	homingDone := TRUE;
+	fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
+						Outputs := stOutputs.Outputs, 
+						fVoltage_A := fHomingVa,
+						fVoltage_B := fHomingVb);
+						
+	uEncoderOffset := stInputs.uEL5101_Counter;
+	stOutputs.uEL5101_SetCounterValue := uEncoderOffset;
+	stOutputs.bEL5101_SetCounter := TRUE;
+	
+	IF stInputs.bEL5101_CounterSet THEN
+		bHomingDone := TRUE;
+		stOutputs.bEL5101_SetCounter := FALSE;
+	END_IF
 END_IF
 
-IF (NOT startHoming) AND homingDone THEN
-	Measurements.homing_done_encoder := 1;
+IF ( NOT bStartHoming ) AND bHomingDone THEN
+	bHomingDoneEncoder := TRUE;
 	
-	IF sControlEnable = TRUE THEN
-		fbCAN_MessageHandler(	Inputs := Inputs, 
-							Outputs := Outputs, 
-							fVoltage_A := Va,
-							fVoltage_B := Vb);
-	ELSIF OpenLoop = TRUE THEN
-		fbCAN_MessageHandler(	Inputs := Inputs, 
-							Outputs := Outputs, 
-							fVoltage_A := SIN(theta_OL),
-							fVoltage_B := COS(theta_OL));
+	IF bControlEnable THEN
+		fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
+							Outputs := stOutputs.Outputs, 
+							fVoltage_A := fVa,
+							fVoltage_B := fVb);
+	ELSIF bOpenLoop THEN
+		fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
+							Outputs := stOutputs.Outputs, 
+							fVoltage_A := SIN(fThetaOl),
+							fVoltage_B := COS(fThetaOl));
 		
-		theta_OL := theta_OL + 2*PI/2500;
-		IF theta_OL > 2*PI THEN
-			theta_OL := 0;
+		fThetaOl := fThetaOl + 2 * LREAL_TO_REAL( PI ) / 2500;
+		IF fThetaOl > 2 * PI THEN
+			fThetaOl := 0;
 		END_IF
 	END_IF
 	
-	
+(*	
 ELSE
-(*	fbCAN_MessageHandler(	Inputs := Inputs, 
+	fbCAN_MessageHandler(	Inputs := Inputs, 
 						Outputs := Outputs, 
 						fVoltage_A := homingVa,
 						fVoltage_B := homingVb);
@@ -136,8 +119,6 @@ END_IF]]></ST>
       <LineId Id="31" Count="0" />
       <LineId Id="263" Count="0" />
       <LineId Id="266" Count="1" />
-      <LineId Id="80" Count="1" />
-      <LineId Id="328" Count="0" />
       <LineId Id="324" Count="0" />
       <LineId Id="321" Count="0" />
       <LineId Id="334" Count="0" />
@@ -146,8 +127,8 @@ END_IF]]></ST>
       <LineId Id="326" Count="0" />
       <LineId Id="338" Count="0" />
       <LineId Id="71" Count="0" />
-      <LineId Id="77" Count="1" />
       <LineId Id="459" Count="0" />
+      <LineId Id="572" Count="0" />
       <LineId Id="53" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="114" Count="0" />
@@ -157,7 +138,14 @@ END_IF]]></ST>
       <LineId Id="159" Count="0" />
       <LineId Id="274" Count="2" />
       <LineId Id="273" Count="0" />
-      <LineId Id="448" Count="1" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="605" Count="1" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="607" Count="0" />
       <LineId Id="174" Count="0" />
       <LineId Id="161" Count="0" />
       <LineId Id="154" Count="0" />

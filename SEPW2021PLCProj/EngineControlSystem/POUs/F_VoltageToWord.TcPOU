@@ -13,9 +13,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-
-// Check that voltage value is between min and max value.
+      <ST><![CDATA[// Check that voltage value is between min and max value.
 IF Voltage_In > Voltage_High_Value THEN
 	Voltage_In := Voltage_High_Value;
 ELSIF Voltage_In < Voltage_Low_Value THEN
@@ -27,7 +25,6 @@ VoltageMultiplier := (Voltage_In-Voltage_Low_Value)/(Voltage_High_Value-Voltage_
 F_VoltageToWord := UINT_TO_WORD(REAL_TO_UINT(VoltageMultiplier*MaxWordValue));]]></ST>
     </Implementation>
     <LineIds Name="F_VoltageToWord">
-      <LineId Id="24" Count="1" />
       <LineId Id="18" Count="2" />
       <LineId Id="22" Count="1" />
       <LineId Id="21" Count="0" />
