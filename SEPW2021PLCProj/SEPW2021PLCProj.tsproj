@@ -2133,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{E4C54860-0726-0349-D6C3-B652F9B484C9}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{72424F6C-39AD-EECA-5908-8BD4224CCAE3}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2158,7 +2158,20 @@
 						</Var>
 						<Var>
 							<Name>MAIN.stInputs.uEL5101_Counter</Name>
+							<Comment><![CDATA[ Encoder]]></Comment>
 							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.bEL5101_CounterSet</Name>
+							<Type>BIT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.uEL5101_LatchValue</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.uEL5101_Frequency</Name>
+							<Type>UDINT</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.stInputs.fAlpha_U</Name>
@@ -2178,7 +2191,7 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.fWactual</Name>
+							<Name>MAIN.stOutputs.fWel</Name>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
@@ -2198,7 +2211,7 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.fTcTheta</Name>
+							<Name>MAIN.stOutputs.fThetaEl</Name>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
@@ -2215,13 +2228,17 @@
 							<Type GUID="{6752D9E1-759C-6E68-540D-BBCAC02BAF4A}" Namespace="IO">CANTXQUEUESTRUCT_N_1</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.uEL5101_CounterSet</Name>
+							<Name>MAIN.stOutputs.uEL5101_SetCounterValue</Name>
 							<Comment><![CDATA[ Encoder]]></Comment>
 							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.uEL5101_CounterSetWORD</Name>
-							<Type>WORD</Type>
+							<Name>MAIN.stOutputs.bEL5101_SetCounter</Name>
+							<Type>BIT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stOutputs.bEL5101_EnabledLatch</Name>
+							<Type>BIT</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2022-02-16T15:34:04">
@@ -2270,6 +2287,28 @@
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2022-10-04T13:24:39">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="2">
+							<OwnerB Name="TIRC^TcCOM Objects^Object2 (controller_21_1_2022)">
+								<Link VarA="MAIN.stOutputs.fTcTheta" TypeA="LREAL" InOutA="1" GuidA="{18071995-0000-0000-0000-00000000000E}" VarB="Input^theta_m" RestoreInfo="ANotFound"/>
+								<Link VarA="MAIN.stOutputs.fWactual" TypeA="LREAL" InOutA="1" GuidA="{18071995-0000-0000-0000-00000000000E}" VarB="Input^w_actual_rad_m" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2022-10-04T15:33:50">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="2">
+							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
+								<Link VarA="MAIN.stOutputs.uEL5101_CounterSet" TypeA="UINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Control compact^Set counter value" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2022-10-04T15:50:25">
+						<OwnerA Name="InputDst" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="1">
+							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
+								<Link VarA="MAIN.stInputs.uEL5101_CounterSet" TypeA="BIT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="ENC Status compact^Status^Set counter done" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
 							<Id NeedCalleeCall="true">0</Id>
@@ -2311,7 +2350,7 @@
 							<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
 							<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
 							<SyncMan>001104002400010003000000000000000600001124010000</SyncMan>
-							<SyncMan>801106002000010004000000000000000a00801120010000</SyncMan>
+							<SyncMan>80110a002000010004000000000000000a00801120010000</SyncMan>
 							<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
 							<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
 							<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
@@ -2375,19 +2414,19 @@
 							</Pdo>
 							<Pdo Name="ENC Status compact" Index="#x1a01" Flags="#x0010" SyncMan="3">
 								<ExcludePdo>#x1a00</ExcludePdo>
-								<Entry Name="Status__Latch C valid" Index="#x6000" Sub="#x01">
+								<Entry Name="Status__Latch C valid" Index="#x6000" Sub="#x01" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Latch extern valid" Index="#x6000" Sub="#x02">
+								<Entry Name="Status__Latch extern valid" Index="#x6000" Sub="#x02" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Set counter done" Index="#x6000" Sub="#x03">
+								<Entry Name="Status__Set counter done" Index="#x6000" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__">
 									<Type GUID="{18071995-0000-0000-0000-002000000002}">ARRAY [0..1] OF BIT</Type>
 								</Entry>
-								<Entry Name="Status__Status of input status" Index="#x6000" Sub="#x06">
+								<Entry Name="Status__Status of input status" Index="#x6000" Sub="#x06" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Open circuit" Index="#x6000" Sub="#x07" Flags="#x00008020">
@@ -2405,19 +2444,19 @@
 								<Entry Name="Status__Status of input C" Index="#x6000" Sub="#x0b" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Status of input gate" Index="#x6000" Sub="#x0c">
+								<Entry Name="Status__Status of input gate" Index="#x6000" Sub="#x0c" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__Status of extern latch" Index="#x6000" Sub="#x0d" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__Sync error" Index="#x6000" Sub="#x0e">
+								<Entry Name="Status__Sync error" Index="#x6000" Sub="#x0e" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Status__TxPDO State" Index="#x6000" Sub="#x0f" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Status__TxPDO Toggle" Index="#x6000" Sub="#x10">
+								<Entry Name="Status__TxPDO Toggle" Index="#x6000" Sub="#x10" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Counter value" Index="#x6000" Sub="#x11">
@@ -2433,7 +2472,7 @@
 									<Type>UDINT</Type>
 								</Entry>
 							</Pdo>
-							<Pdo Name="ENC Frequency" Index="#x1a03" Flags="#x0010">
+							<Pdo Name="ENC Frequency" Index="#x1a03" Flags="#x0010" SyncMan="3">
 								<ExcludePdo>#x1a02</ExcludePdo>
 								<Entry Name="Frequency value" Index="#x6000" Sub="#x13">
 									<Type>UDINT</Type>
@@ -4728,7 +4767,7 @@ Slave-Mode:
 				<CanOpen>
 					<Fcxxxx>
 						<DevSettings BusyIntEnabled="true" DisableSlots="true" NetId="9d1858c30401" EquiCycleTime="1000" FifoSize="5" CycleDivider="1"/>
-						<DevParameter CycleTime="10000" InputShift="10"/>
+						<DevParameter CycleTime="1000" InputShift="10"/>
 						<EquiParameter RelationShiftCycle="0"/>
 					</Fcxxxx>
 					<BusParameter NodeId="127" CobIdSync="128" TxPdoWindowSize="5" CycleDivider="1" MaxLoPrioQueue="100" Bt1="20" TimerTick="2" BusActiveDivider="125" TxBusyTime="500" TimeIntegral="1000" WdTimeoutInCycleTime="25000"/>
@@ -4736,4 +4775,42 @@ Slave-Mode:
 			</Device>
 		</Io>
 	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500820000101}" Id="#x02030030"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500840000403}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^EngineControlSystem^EngineControlSystem Instance">
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 10 (EL3702)">
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL3702Ch1_In" VarB="Ch1 Sample 0^Ch1 Value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL3702Ch2_In" VarB="Ch2 Sample 0^Ch2 Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 11 (EL3702)">
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL3702Ch3_In" VarB="Ch1 Sample 0^Ch1 Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.bEL5101_CounterSet" VarB="ENC Status compact^Status^Set counter done"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL5101_Counter" VarB="ENC Status compact^Counter value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL5101_Frequency" VarB="ENC Frequency^Frequency value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL5101_LatchValue" VarB="ENC Status compact^Latch value"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.bEL5101_EnabledLatch" VarB="ENC Control compact^Control^Enable latch C"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.bEL5101_SetCounter" VarB="ENC Control compact^Control^Set counter"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.uEL5101_SetCounterValue" VarB="ENC Control compact^Set counter value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 3 (EL6751)^Zybo (CAN Interface)">
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.Inputs" VarB="Inputs^RxQueue"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.Outputs" VarB="Outputs^TxQueue"/>
+			</OwnerB>
+			<OwnerB Name="TIRC^TcCOM Objects^Object2 (controller_21_1_2022)">
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.fAlpha_U" VarB="Output^U_alpha_beta[0]"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.fBeta_U" VarB="Output^U_alpha_beta[1]"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fControlEnable" VarB="Input^enable"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIa" VarB="Input^i_abc[0]"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIb" VarB="Input^i_abc[1]"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIc" VarB="Input^i_abc[2]"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fThetaMech" VarB="Input^theta_m"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fWmech" VarB="Input^w_actual_rad_m"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fWref" VarB="Input^w_ref_rpm"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
 </TcSmProject>

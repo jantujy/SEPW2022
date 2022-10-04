@@ -17,9 +17,6 @@ VAR
 	fMotorSpeed								: REAL;
 	fThetaOut, fThetaElOut, fOmegaOut	 	: REAL;
 	
-	fTheta 									: REAL;
-	fThetaEl 								: REAL;
-	fOmega									: REAL;
 	fVa, fVb								: REAL;
 	
 	bControlEnable							: BOOL := FALSE;
@@ -57,27 +54,33 @@ stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702
 //	EL5101_CounterSetWORD.2 := FALSE;
 //END_IF
 
-fbEncoder(	fThetaEl => stOutputs.fTcTheta,
-			fThetaMech => stOutputs.fThetaMech,
-			fOmegaEl => stOutputs.fWactual,
-			fOmegaMech => stOutputs.fWmech);
+fbEncoder(	fThetaMech => stOutputs.fThetaMech,
+			fOmegaMech => stOutputs.fWmech
+);
 			
 fVa := LREAL_TO_REAL(stInputs.fAlpha_U);
 fVb := LREAL_TO_REAL(stInputs.fBeta_U);
 
-IF bStartHoming THEN
+IF bStartHoming AND ( NOT bHomingDone ) THEN
 	stOutputs.fControlEnable := 0;
 	//fbHomingTimer(DONE => homingDone);
 	fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
 						Outputs := stOutputs.Outputs, 
 						fVoltage_A := fHomingVa,
 						fVoltage_B := fHomingVb);
+						
 	uEncoderOffset := stInputs.uEL5101_Counter;
-	bHomingDone := TRUE;
+	stOutputs.uEL5101_SetCounterValue := uEncoderOffset;
+	stOutputs.bEL5101_SetCounter := TRUE;
+	
+	IF stInputs.bEL5101_CounterSet THEN
+		bHomingDone := TRUE;
+		stOutputs.bEL5101_SetCounter := FALSE;
+	END_IF
 END_IF
 
-IF (NOT bStartHoming) AND bHomingDone THEN
-	bHomingDoneEncoder := 1;
+IF ( NOT bStartHoming ) AND bHomingDone THEN
+	bHomingDoneEncoder := TRUE;
 	
 	IF bControlEnable THEN
 		fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
@@ -124,8 +127,8 @@ END_IF]]></ST>
       <LineId Id="326" Count="0" />
       <LineId Id="338" Count="0" />
       <LineId Id="71" Count="0" />
-      <LineId Id="77" Count="1" />
       <LineId Id="459" Count="0" />
+      <LineId Id="572" Count="0" />
       <LineId Id="53" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="114" Count="0" />
@@ -135,7 +138,14 @@ END_IF]]></ST>
       <LineId Id="159" Count="0" />
       <LineId Id="274" Count="2" />
       <LineId Id="273" Count="0" />
-      <LineId Id="448" Count="1" />
+      <LineId Id="640" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="604" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="605" Count="1" />
+      <LineId Id="641" Count="0" />
+      <LineId Id="607" Count="0" />
       <LineId Id="174" Count="0" />
       <LineId Id="161" Count="0" />
       <LineId Id="154" Count="0" />

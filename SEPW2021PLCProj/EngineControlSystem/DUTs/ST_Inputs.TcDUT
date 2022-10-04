@@ -10,7 +10,12 @@ STRUCT
 	uEL3702Ch1_In 		AT %I*	: INT;
 	uEL3702Ch2_In 		AT %I*	: INT;
 	uEL3702Ch3_In 		AT %I*	: INT;
+	
+	// Encoder
 	uEL5101_Counter 	AT %I*	: UINT;
+	bEL5101_CounterSet	AT %I*	: BIT;
+	uEL5101_LatchValue	AT %I*	: UINT;
+	uEL5101_Frequency	AT %I*	: UDINT;
 	
 	// From controller
 	fAlpha_U, fBeta_U	AT %I*	: LREAL;

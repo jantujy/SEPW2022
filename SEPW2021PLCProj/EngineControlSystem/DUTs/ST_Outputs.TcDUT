@@ -5,17 +5,18 @@
 STRUCT
 	// To controller
 	fWref 					AT %Q*				: LREAL;
-	fWactual 				AT %Q*				: LREAL;
+	fWel	 				AT %Q*				: LREAL;
 	fWmech					AT %Q* 				: LREAL;
 	fIa, fIb, fIc 			AT %Q*				: LREAL;
-	fTcTheta				AT %Q*				: LREAL;
+	fThetaEl				AT %Q*				: LREAL;
 	fThetaMech 				AT %Q* 				: LREAL;
-	fControlEnable 			AT %Q*				: LREAL := 0;
+	fControlEnable 			AT %Q*				: LREAL;
 	// CAN
 	Outputs					AT %Q*				: CANTXQUEUESTRUCT_N_1;
 	// Encoder
-	uEL5101_CounterSet 		AT %Q*				: UINT;
-	uEL5101_CounterSetWORD 	AT %Q* 				: WORD;
+	uEL5101_SetCounterValue AT %Q*				: UINT;
+	bEL5101_SetCounter		AT %Q*				: BIT;
+	bEL5101_EnabledLatch	AT %Q*				: BIT;
 END_STRUCT
 END_TYPE
 ]]></Declaration>
