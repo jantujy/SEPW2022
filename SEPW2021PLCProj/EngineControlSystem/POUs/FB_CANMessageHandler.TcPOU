@@ -18,9 +18,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-wV_a := F_VoltageToWord(Voltage_In := fVoltage_A);
-wV_b := F_VoltageToWord(Voltage_In := fVoltage_B);
+      <ST><![CDATA[wV_a := M_VoltageToWord(Voltage_In := fVoltage_A);
+wV_b := M_VoltageToWord(Voltage_In := fVoltage_B);
 
 MessageToSend := M_GenerateCANMessage(cobID := 4, V_a := wV_a, V_b := wV_b);
 
@@ -115,18 +114,41 @@ END_FOR
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_VoltageToWord" Id="{2b790263-0f73-498c-8f3a-e90bfba913cf}">
+      <Declaration><![CDATA[METHOD M_VoltageToWord : WORD
+VAR_INPUT
+	Voltage_In			: REAL; // Voltage input
+END_VAR
+VAR
+	VoltageMultiplier	: REAL;
+	MaxWordValue		: REAL := 16#FFFF;
+	Voltage_High_Value 	: REAL := 0.866;
+	Voltage_Low_Value	: REAL := -0.866;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Check that voltage value is between min and max value.
+IF Voltage_In > Voltage_High_Value THEN
+	Voltage_In := Voltage_High_Value;
+ELSIF Voltage_In < Voltage_Low_Value THEN
+	Voltage_In := Voltage_Low_Value;
+END_IF
+
+VoltageMultiplier := (Voltage_In-Voltage_Low_Value)/(Voltage_High_Value-Voltage_Low_Value);
+
+M_VoltageToWord := UINT_TO_WORD(REAL_TO_UINT(VoltageMultiplier*MaxWordValue));]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_CANMessageHandler">
-      <LineId Id="72" Count="2" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="28" Count="1" />
+      <LineId Id="90" Count="8" />
       <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="FB_CANMessageHandler.M_GenerateCANMessage">
       <LineId Id="17" Count="67" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CANMessageHandler.M_VoltageToWord">
+      <LineId Id="16" Count="8" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

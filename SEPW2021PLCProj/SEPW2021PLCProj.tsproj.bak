@@ -2133,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{72424F6C-39AD-EECA-5908-8BD4224CCAE3}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{0DBA1965-27D7-C53E-72A7-3721029AD001}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2144,20 +2144,20 @@
 							<Type GUID="{8AEDF2A5-6518-4A28-8E78-F99DDE3C8068}" Namespace="IO">CANRXQUEUESTRUCT_N_1</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.uEL3702Ch1_In</Name>
+							<Name>MAIN.stInputs.nEL3702Ch1_In</Name>
 							<Comment><![CDATA[ IO]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.uEL3702Ch2_In</Name>
+							<Name>MAIN.stInputs.nEL3702Ch2_In</Name>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.uEL3702Ch3_In</Name>
+							<Name>MAIN.stInputs.nEL3702Ch3_In</Name>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.uEL5101_Counter</Name>
+							<Name>MAIN.stInputs.nEL5101_Counter</Name>
 							<Comment><![CDATA[ Encoder]]></Comment>
 							<Type>UINT</Type>
 						</Var>
@@ -2166,11 +2166,11 @@
 							<Type>BIT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.uEL5101_LatchValue</Name>
+							<Name>MAIN.stInputs.nEL5101_LatchValue</Name>
 							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.uEL5101_Frequency</Name>
+							<Name>MAIN.stInputs.nEL5101_Frequency</Name>
 							<Type>UDINT</Type>
 						</Var>
 						<Var>
@@ -2228,7 +2228,7 @@
 							<Type GUID="{6752D9E1-759C-6E68-540D-BBCAC02BAF4A}" Namespace="IO">CANTXQUEUESTRUCT_N_1</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.uEL5101_SetCounterValue</Name>
+							<Name>MAIN.stOutputs.nEL5101_SetCounterValue</Name>
 							<Comment><![CDATA[ Encoder]]></Comment>
 							<Type>UINT</Type>
 						</Var>
@@ -2346,7 +2346,7 @@
 					<Box Id="9" BoxType="9099" BoxFlags="#x00000020">
 						<Name>Term 9 (EL5101-0010)</Name>
 						<ImageId>1002</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0c05" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x13ed3052" RevisionNo="#x0013000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5101-0010 1Ch. Inc. Encoder 5V (20 million increments/s)" Desc="EL5101-0010" PortABoxInfo="#x01000008">
+						<EtherCAT SlaveType="2" PdiType="#x0c05" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x13ed3052" RevisionNo="#x0013000a" InfoDataAddr="true" InfoDataDcTimes="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5101-0010 1Ch. Inc. Encoder 5V (20 million increments/s)" Desc="EL5101-0010" PortABoxInfo="#x01000008">
 							<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
 							<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
 							<SyncMan>001104002400010003000000000000000600001124010000</SyncMan>
@@ -4781,19 +4781,20 @@ Slave-Mode:
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500840000403}" Id="#x02030010"/>
 		<OwnerA Name="TIPC^EngineControlSystem^EngineControlSystem Instance">
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 10 (EL3702)">
-				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL3702Ch1_In" VarB="Ch1 Sample 0^Ch1 Value"/>
-				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL3702Ch2_In" VarB="Ch2 Sample 0^Ch2 Value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL3702Ch1_In" VarB="Ch1 Sample 0^Ch1 Value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL3702Ch2_In" VarB="Ch2 Sample 0^Ch2 Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 11 (EL3702)">
-				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL3702Ch3_In" VarB="Ch1 Sample 0^Ch1 Value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL3702Ch3_In" VarB="Ch1 Sample 0^Ch1 Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.bEL5101_CounterSet" VarB="ENC Status compact^Status^Set counter done"/>
-				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL5101_Counter" VarB="ENC Status compact^Counter value"/>
-				<Link VarA="PlcTask Inputs^MAIN.stInputs.uEL5101_LatchValue" VarB="ENC Status compact^Latch value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_Counter" VarB="ENC Status compact^Counter value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_Frequency" VarB="ENC Frequency^Frequency value"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_LatchValue" VarB="ENC Status compact^Latch value"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.bEL5101_EnabledLatch" VarB="ENC Control compact^Control^Enable latch C"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.bEL5101_SetCounter" VarB="ENC Control compact^Control^Set counter"/>
-				<Link VarA="PlcTask Outputs^MAIN.stOutputs.uEL5101_SetCounterValue" VarB="ENC Control compact^Set counter value"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.nEL5101_SetCounterValue" VarB="ENC Control compact^Set counter value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EL6751)^Zybo (CAN Interface)">
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.Inputs" VarB="Inputs^RxQueue"/>

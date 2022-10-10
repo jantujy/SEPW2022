@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
   <POU Name="MAIN" Id="{bdfa0062-539d-4679-9449-b5aad24542ad}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -10,7 +10,7 @@ VAR
 	
 	// Encoder
 	bHomingDoneEncoder						: BOOL;
-	uEncoderOffset							: UINT;
+	nEncoderOffset							: UINT;
 	
 	fCurrentMeasurement_V					: REAL; // Current measurement as voltage
 	fCurrent_I								: REAL; // Current as A
@@ -43,9 +43,9 @@ END_IF
 
 stOutputs.fWref := fWRefPrep * 2;
 
-stOutputs.fIa := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702Ch1_In));
-stOutputs.fIb := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702Ch2_In));
-stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.uEL3702Ch3_In));
+stOutputs.fIa := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch1_In));
+stOutputs.fIb := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch2_In));
+stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch3_In));
 
 //IF ( Measurements.COUNTER_VALUE > Constants.PULSES_PER_REV ) AND (EL5101_CounterSetWORD.2 = FALSE) THEN
 //	EL5101_CounterSet := Constants.PULSES_PER_REV - (16#FFFF - Measurements.COUNTER_VALUE);
@@ -69,8 +69,8 @@ IF bStartHoming AND ( NOT bHomingDone ) THEN
 						fVoltage_A := fHomingVa,
 						fVoltage_B := fHomingVb);
 						
-	uEncoderOffset := stInputs.uEL5101_Counter;
-	stOutputs.uEL5101_SetCounterValue := uEncoderOffset;
+	nEncoderOffset := stInputs.nEL5101_Counter;
+	stOutputs.nEL5101_SetCounterValue := nEncoderOffset;
 	stOutputs.bEL5101_SetCounter := TRUE;
 	
 	IF stInputs.bEL5101_CounterSet THEN
@@ -109,60 +109,7 @@ ELSE
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="30" Count="0" />
-      <LineId Id="118" Count="0" />
-      <LineId Id="329" Count="0" />
-      <LineId Id="391" Count="2" />
-      <LineId Id="390" Count="0" />
-      <LineId Id="394" Count="0" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="263" Count="0" />
-      <LineId Id="266" Count="1" />
-      <LineId Id="324" Count="0" />
-      <LineId Id="321" Count="0" />
-      <LineId Id="334" Count="0" />
-      <LineId Id="325" Count="0" />
-      <LineId Id="335" Count="1" />
-      <LineId Id="326" Count="0" />
-      <LineId Id="338" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="459" Count="0" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="318" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="274" Count="2" />
-      <LineId Id="273" Count="0" />
-      <LineId Id="640" Count="0" />
-      <LineId Id="448" Count="0" />
-      <LineId Id="604" Count="0" />
-      <LineId Id="639" Count="0" />
-      <LineId Id="608" Count="0" />
-      <LineId Id="605" Count="1" />
-      <LineId Id="641" Count="0" />
-      <LineId Id="607" Count="0" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="450" Count="0" />
-      <LineId Id="509" Count="1" />
-      <LineId Id="513" Count="2" />
-      <LineId Id="511" Count="1" />
-      <LineId Id="521" Count="2" />
-      <LineId Id="519" Count="0" />
-      <LineId Id="529" Count="4" />
-      <LineId Id="518" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="516" Count="0" />
-      <LineId Id="162" Count="0" />
-      <LineId Id="165" Count="2" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="180" Count="0" />
+      <LineId Id="775" Count="72" />
       <LineId Id="164" Count="0" />
     </LineIds>
   </POU>

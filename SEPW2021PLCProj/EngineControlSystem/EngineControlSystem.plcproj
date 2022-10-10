@@ -54,6 +54,12 @@
     <Compile Include="OLD\F_Homing.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OLD\F_MechToEl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OLD\F_VoltageToWord.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="OLD\GVL_Constants.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -74,13 +80,7 @@
     <Compile Include="POUs\F_AnalogIntToVoltage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\F_MechToEl.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\F_VoltageToCurrentConvert.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\F_VoltageToWord.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
