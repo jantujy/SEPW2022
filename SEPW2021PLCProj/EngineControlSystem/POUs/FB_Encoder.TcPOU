@@ -8,17 +8,19 @@ VAR_OUTPUT
 END_VAR
 VAR
 	u16bitMax			: UINT := 65535;
+	uPpr				: REAL := 4096;
+	uFreqScale			: REAL := 0.01;
 	uCounter	 		: UINT;
 	uCounterRaw			: UINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[uCounter := MAIN.stInputs.uEL5101_Counter;
-uCounter := uCounterRaw * 4;
+      <ST><![CDATA[uCounterRaw := MAIN.stInputs.uEL5101_Counter;
+uCounter := uCounterRaw * 4; // Counter is multiplied by four so we get overflow when the rotor has spinned a full circle
 
-fThetaMech := UINT_TO_LREAL( uCounter / u16bitMax ) * 2 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
+fThetaMech := UINT_TO_LREAL( uCounter ) / u16bitMax * 2 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
 
-fOmegaMech := 2 * PI * MAIN.stInputs.uEL5101_Frequency;]]></ST>
+fOmegaMech := ( UDINT_TO_LREAL( MAIN.stInputs.uEL5101_Frequency ) / uPpr * uFreqScale ); // Currently Hz and not omega]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
       <LineId Id="74" Count="0" />
