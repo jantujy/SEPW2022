@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <DUT Name="ST_Inputs" Id="{39d9a656-d2dc-42a1-b92e-092053ce1266}">
     <Declaration><![CDATA[TYPE ST_Inputs :
 STRUCT
@@ -14,6 +14,7 @@ STRUCT
 	// Encoder
 	nEL5101_Counter 	AT %I*	: UINT;
 	bEL5101_CounterSet	AT %I*	: BIT;
+	bEl5101_C_Status	AT %I*	: BIT;
 	nEL5101_LatchValue	AT %I*	: UINT;
 	nEL5101_Frequency	AT %I*	: UDINT;
 	

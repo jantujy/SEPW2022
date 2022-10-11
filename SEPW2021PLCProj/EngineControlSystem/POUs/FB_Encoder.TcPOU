@@ -7,9 +7,8 @@ VAR_OUTPUT
 	fOmegaMech			: LREAL;
 END_VAR
 VAR
-	fRotationDirection	: REAL;
-	fThetaMechPrev		: LREAL;
-	fThetaDelta			: LREAL;
+	rtrig_C_status		: R_TRIG;
+	fRotationDirection	: LREAL;
 	fPpr				: REAL := 4096;
 	fFreqScale			: REAL := 0.01;
 	f16bitMax			: REAL := 65535;
@@ -21,35 +20,31 @@ END_VAR
       <ST><![CDATA[nCounterRaw := MAIN.stInputs.nEL5101_Counter;
 nCounter := nCounterRaw * 4; // Counter is multiplied by four so we get overflow when the rotor has spinned a full circle
 
-fThetaMechPrev := fThetaMech;
 fThetaMech := UINT_TO_LREAL( nCounter ) / f16bitMax * 2.0 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
 
 
 // Rotation direction
-fThetaDelta := fThetaMech - fThetaMechPrev;
-
-IF fThetaDelta < 0 THEN
-	fThetaMech := ( 2.0 * PI - ABS( fThetaDelta ) ) + 2.0 * PI;
-END_IF
-
-IF fThetaMechPrev < fThetaMech THEN
-	fRotationDirection := 1;
-ELSIF fThetaMechPrev > fThetaMech THEN
-	fRotationDirection := -1;
+rtrig_C_status( CLK := MAIN.stInputs.bEl5101_C_Status );
+IF rtrig_C_status.Q THEN
+	IF nCounterRaw < MAIN.stInputs.nEL5101_LatchValue THEN
+		fRotationDirection := -1;
+	ELSIF nCounterRaw > MAIN.stInputs.nEL5101_LatchValue THEN
+		fRotationDirection := 1;
+	END_IF
 END_IF
 
 fOmegaMech := fRotationDirection * 2.0 * PI * ( UDINT_TO_LREAL( MAIN.stInputs.nEL5101_Frequency ) / fPpr * fFreqScale );]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
-      <LineId Id="282" Count="8" />
-      <LineId Id="304" Count="0" />
-      <LineId Id="291" Count="2" />
-      <LineId Id="303" Count="0" />
-      <LineId Id="294" Count="0" />
-      <LineId Id="306" Count="0" />
-      <LineId Id="299" Count="0" />
-      <LineId Id="307" Count="0" />
+      <LineId Id="282" Count="1" />
+      <LineId Id="285" Count="4" />
+      <LineId Id="322" Count="0" />
       <LineId Id="298" Count="0" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="319" Count="1" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="316" Count="0" />
       <LineId Id="301" Count="0" />
       <LineId Id="253" Count="0" />
     </LineIds>

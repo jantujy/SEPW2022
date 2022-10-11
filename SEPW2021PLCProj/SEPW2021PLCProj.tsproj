@@ -2133,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{0DBA1965-27D7-C53E-72A7-3721029AD001}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{0EC1D80B-F72B-B90D-DF6E-00524493375C}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2163,6 +2163,10 @@
 						</Var>
 						<Var>
 							<Name>MAIN.stInputs.bEL5101_CounterSet</Name>
+							<Type>BIT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.bEl5101_C_Status</Name>
 							<Type>BIT</Type>
 						</Var>
 						<Var>
@@ -2306,6 +2310,13 @@
 						<OwnerA Name="InputDst" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="1">
 							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
 								<Link VarA="MAIN.stInputs.uEL5101_CounterSet" TypeA="BIT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="ENC Status compact^Status^Set counter done" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2022-10-11T17:02:12">
+						<OwnerA Name="InputDst" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="1">
+							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
+								<Link VarA="MAIN.stInputs.bEl5101_C_state" TypeA="BIT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="ENC Status compact^Status^Status of input C" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -4789,6 +4800,7 @@ Slave-Mode:
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.bEL5101_CounterSet" VarB="ENC Status compact^Status^Set counter done"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.bEl5101_C_Status" VarB="ENC Status compact^Status^Status of input C"/>
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_Counter" VarB="ENC Status compact^Counter value"/>
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_Frequency" VarB="ENC Frequency^Frequency value"/>
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_LatchValue" VarB="ENC Status compact^Latch value"/>
