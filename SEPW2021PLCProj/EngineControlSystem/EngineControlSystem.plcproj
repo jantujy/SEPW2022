@@ -18,6 +18,9 @@
     <LibraryReferences>{567fcb39-236d-4da0-8796-747fe713e87f}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DUTs\E_RotationDirection.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ST_Inputs.TcDUT">
       <SubType>Code</SubType>
     </Compile>

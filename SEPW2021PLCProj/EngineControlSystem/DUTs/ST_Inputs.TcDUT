@@ -14,9 +14,9 @@ STRUCT
 	// Encoder
 	nEL5101_Counter 	AT %I*	: UINT;
 	bEL5101_CounterSet	AT %I*	: BIT;
-	bEl5101_C_Status	AT %I*	: BIT;
 	nEL5101_LatchValue	AT %I*	: UINT;
 	nEL5101_Frequency	AT %I*	: UDINT;
+	bEL5101_LatchValid	AT %I*	: BIT;
 	
 	// From controller
 	fAlpha_U, fBeta_U	AT %I*	: LREAL;

@@ -2,49 +2,61 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="FB_Encoder" Id="{6012c401-bcaa-4387-b79e-99c6207e5ca8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Encoder
+VAR_INPUT
+	stInputs				: REFERENCE TO ST_Inputs;
+	stOutputs				: REFERENCE TO ST_Outputs;
+END_VAR
 VAR_OUTPUT
-	fThetaMech			: LREAL;
-	fOmegaMech			: LREAL;
+	fThetaMech				: LREAL;
+	fOmegaMech				: LREAL;
 END_VAR
 VAR
-	rtrig_C_status		: R_TRIG;
-	fRotationDirection	: LREAL;
-	fPpr				: REAL := 4096;
-	fFreqScale			: REAL := 0.01;
-	f16bitMax			: REAL := 65535;
-	nCounter	 		: UINT;
-	nCounterRaw			: UINT;
+	fOmegaMechNoDirection	: LREAL; // No rotation direction
+	fRotationDirection		: REAL;
+	fPpr					: REAL := 4096;
+	fFreqScale				: REAL := 0.01;
+	f16bitMax				: REAL := 65535;
+	nCounter	 			: INT;
+	nCounterAngle			: UINT;
+	nCounterLatch			: INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[nCounterRaw := MAIN.stInputs.nEL5101_Counter;
-nCounter := nCounterRaw * 4; // Counter is multiplied by four so we get overflow when the rotor has spinned a full circle
+      <ST><![CDATA[stOutputs.bEL5101_EnabledLatch := TRUE;
+nCounterAngle := stInputs.nEL5101_Counter * 4;
 
-fThetaMech := UINT_TO_LREAL( nCounter ) / f16bitMax * 2.0 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
-
+fThetaMech := UINT_TO_LREAL( nCounterAngle ) / f16bitMax * 2.0 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
 
 // Rotation direction
-rtrig_C_status( CLK := MAIN.stInputs.bEl5101_C_Status );
-IF rtrig_C_status.Q THEN
-	IF nCounterRaw < MAIN.stInputs.nEL5101_LatchValue THEN
-		fRotationDirection := -1;
-	ELSIF nCounterRaw > MAIN.stInputs.nEL5101_LatchValue THEN
+IF stInputs.bEL5101_LatchValid THEN
+	nCounterLatch := UINT_TO_INT( stInputs.nEL5101_LatchValue );
+	
+	IF nCounterLatch < 0 THEN
 		fRotationDirection := 1;
+	ELSIF nCounterLatch > 0 THEN
+		fRotationDirection := -1;
 	END_IF
+	
+	stOutputs.bEL5101_EnabledLatch := FALSE;
 END_IF
 
-fOmegaMech := fRotationDirection * 2.0 * PI * ( UDINT_TO_LREAL( MAIN.stInputs.nEL5101_Frequency ) / fPpr * fFreqScale );]]></ST>
+fOmegaMechNoDirection := 2.0 * PI * ( UDINT_TO_LREAL( stInputs.nEL5101_Frequency ) / fPpr * fFreqScale );
+fOmegaMech := fRotationDirection * fOmegaMechNoDirection;]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
-      <LineId Id="282" Count="1" />
-      <LineId Id="285" Count="4" />
-      <LineId Id="322" Count="0" />
-      <LineId Id="298" Count="0" />
-      <LineId Id="315" Count="0" />
-      <LineId Id="317" Count="0" />
-      <LineId Id="319" Count="1" />
-      <LineId Id="318" Count="0" />
-      <LineId Id="316" Count="0" />
+      <LineId Id="528" Count="0" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="288" Count="1" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="518" Count="0" />
+      <LineId Id="521" Count="0" />
+      <LineId Id="516" Count="0" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="522" Count="4" />
+      <LineId Id="517" Count="0" />
+      <LineId Id="325" Count="0" />
       <LineId Id="301" Count="0" />
       <LineId Id="253" Count="0" />
     </LineIds>

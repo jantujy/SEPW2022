@@ -2133,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{0EC1D80B-F72B-B90D-DF6E-00524493375C}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{4E9E3783-1959-5620-D9BB-C489F007EDD6}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2166,16 +2166,16 @@
 							<Type>BIT</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stInputs.bEl5101_C_Status</Name>
-							<Type>BIT</Type>
-						</Var>
-						<Var>
 							<Name>MAIN.stInputs.nEL5101_LatchValue</Name>
 							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.stInputs.nEL5101_Frequency</Name>
 							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.bEL5101_LatchValid</Name>
+							<Type>BIT</Type>
 						</Var>
 						<Var>
 							<Name>MAIN.stInputs.fAlpha_U</Name>
@@ -2310,13 +2310,6 @@
 						<OwnerA Name="InputDst" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="1">
 							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
 								<Link VarA="MAIN.stInputs.uEL5101_CounterSet" TypeA="BIT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="ENC Status compact^Status^Set counter done" RestoreInfo="ANotFound"/>
-							</OwnerB>
-						</OwnerA>
-					</UnrestoredVarLinks>
-					<UnrestoredVarLinks ImportTime="2022-10-11T17:02:12">
-						<OwnerA Name="InputDst" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="1">
-							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
-								<Link VarA="MAIN.stInputs.bEl5101_C_state" TypeA="BIT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="ENC Status compact^Status^Status of input C" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -2503,13 +2496,13 @@
 							</Pdo>
 							<Pdo Name="ENC Control" Index="#x1600" InOut="1" Flags="#x0010">
 								<ExcludePdo>#x1601</ExcludePdo>
-								<Entry Name="Control__Enable latch C" Index="#x7000" Sub="#x01">
+								<Entry Name="Control__Enable latch C" Index="#x7000" Sub="#x01" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Control__Enable latch extern on positive edge" Index="#x7000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="Control__Set counter" Index="#x7000" Sub="#x03">
+								<Entry Name="Control__Set counter" Index="#x7000" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="Control__Enable latch extern on negative edge" Index="#x7000" Sub="#x04">
@@ -4805,7 +4798,6 @@ Slave-Mode:
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.nEL5101_LatchValue" VarB="ENC Status compact^Latch value"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.bEL5101_EnabledLatch" VarB="ENC Control compact^Control^Enable latch C"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.bEL5101_SetCounter" VarB="ENC Control compact^Control^Set counter"/>
-				<Link VarA="PlcTask Outputs^MAIN.stOutputs.nEL5101_SetCounterValue" VarB="ENC Control compact^Set counter value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 3 (EL6751)^Zybo (CAN Interface)">
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.Inputs" VarB="Inputs^RxQueue"/>

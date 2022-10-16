@@ -54,8 +54,10 @@ stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702
 //	EL5101_CounterSetWORD.2 := FALSE;
 //END_IF
 
-fbEncoder(	fThetaMech => stOutputs.fThetaMech,
-			fOmegaMech => stOutputs.fWmech
+fbEncoder(	stInputs	:= stInputs,
+			stOutputs	:= stOutputs,
+			fThetaMech 	=> stOutputs.fThetaMech,
+			fOmegaMech 	=> stOutputs.fWmech
 );
 			
 fVa := LREAL_TO_REAL(stInputs.fAlpha_U);
@@ -109,8 +111,10 @@ ELSE
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="775" Count="21" />
+      <LineId Id="879" Count="0" />
       <LineId Id="878" Count="0" />
-      <LineId Id="776" Count="71" />
+      <LineId Id="797" Count="50" />
       <LineId Id="164" Count="0" />
     </LineIds>
   </POU>

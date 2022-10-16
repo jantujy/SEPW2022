@@ -20,7 +20,19 @@
               <Children />
             </Node>
             <Node>
-              <Title>uEL5101_Frequency</Title>
+              <Title>fOmegaMechNoDirection</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>fThetaMech</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>nCounterRaw</Title>
               <Expanded>False</Expanded>
               <FileName></FileName>
               <Children />
@@ -33,12 +45,18 @@
           <FileName></FileName>
           <Children>
             <Node>
-              <Title>Axis Group (1)</Title>
+              <Title>Axis Group</Title>
               <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
                   <Title>fOmegaMech</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+                <Node>
+                  <Title>fOmegaMechNoDirection</Title>
                   <Expanded>False</Expanded>
                   <FileName></FileName>
                   <Children />
@@ -53,12 +71,18 @@
           <FileName></FileName>
           <Children>
             <Node>
-              <Title>Axis Group (2)</Title>
+              <Title>Axis Group (1)</Title>
               <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
-                  <Title>uEL5101_Frequency</Title>
+                  <Title>fThetaMech</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+                <Node>
+                  <Title>nCounterRaw</Title>
                   <Expanded>False</Expanded>
                   <FileName></FileName>
                   <Children />
