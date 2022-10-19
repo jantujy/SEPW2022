@@ -2,33 +2,114 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
   <POU Name="FB_Encoder" Id="{6012c401-bcaa-4387-b79e-99c6207e5ca8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Encoder
+VAR_INPUT
+	stInputs				: REFERENCE TO ST_Inputs;
+	stOutputs				: REFERENCE TO ST_Outputs;
+END_VAR
 VAR_OUTPUT
-	fThetaMech			: LREAL;
-	fOmegaMech			: LREAL;
+	fThetaMech				: LREAL;
+	fOmegaMech				: LREAL;
 END_VAR
 VAR
-	u16bitMax			: UINT := 65535;
-	uPpr				: REAL := 4096;
-	uFreqScale			: REAL := 0.01;
-	uCounter	 		: UINT;
-	uCounterRaw			: UINT;
+	bUseLatch				: BOOL;
+	bInit					: BOOL;
+	fOmegaMechNoDirection	: LREAL := 0.0; // No rotation direction
+	fRotationDirection		: LREAL := 0.0;
+	fPpr					: LREAL := 4096;
+	fFreqScale				: LREAL := 0.01;
+	f16bitMax				: LREAL := 65535;
+	nCounter				: UINT;
+	fTheta					: LREAL := 0.0;
+	fThetaPrev				: LREAL := 0.0;
+	nThetaDelta				: LREAL := 0.0;
+	nThetaDeltaPrev			: LREAL := 0.0;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[uCounterRaw := MAIN.stInputs.uEL5101_Counter;
-uCounter := uCounterRaw * 4; // Counter is multiplied by four so we get overflow when the rotor has spinned a full circle
+      <ST><![CDATA[// Zero pulse location zeroing
+IF NOT bInit THEN
+	stOutputs.bEL5101_EnabledLatch := TRUE;
+	
+	IF stInputs.bEL5101_LatchValid THEN
+		stOutputs.nEL5101_SetCounterValue := stInputs.nEL5101_LatchValue;
+		stOutputs.bEL5101_SetCounter := TRUE;
+		bInit := stInputs.bEL5101_CounterSet;
+	END_IF
+	
+	stOutputs.bEL5101_EnabledLatch := FALSE;
+END_IF
 
-fThetaMech := UINT_TO_LREAL( uCounter ) / u16bitMax * 2 * PI; // Counter is divided by max value of UINT times two because one circle is 2pi
+// Angle calculation
+nCounter		:= stInputs.nEL5101_Counter * 4;
+fThetaPrev 		:= fTheta;
+fTheta	:= ( 2.0 * PI ) - ( UINT_TO_LREAL( nCounter ) / f16bitMax * 2.0 * PI ); // Counter is divided by max value of UINT times two because one circle is 2pi
 
-fOmegaMech := ( UDINT_TO_LREAL( MAIN.stInputs.uEL5101_Frequency ) / uPpr * uFreqScale ); // Currently Hz and not omega]]></ST>
+
+// Rotation direction calculation
+IF bUseLatch THEN
+	stOutputs.bEL5101_EnabledLatch := TRUE;
+	
+	IF stInputs.nEL5101_LatchValue < stInputs.nEL5101_Counter THEN
+		fRotationDirection := -1;
+	ELSIF stInputs.nEL5101_LatchValue > stInputs.nEL5101_Counter THEN
+		fRotationDirection := 1;
+	END_IF
+	
+	stOutputs.bEL5101_EnabledLatch := FALSE;
+	
+ELSE
+	nThetaDeltaPrev := nThetaDelta;
+	nThetaDelta		:= fTheta - fThetaPrev;
+	
+	IF nThetaDelta < 0 AND nThetaDeltaPrev < 0 THEN
+		fRotationDirection := 1;
+	ELSIF  nThetaDelta > 0 AND nThetaDeltaPrev > 0  THEN
+			fRotationDirection := -1;
+	END_IF
+END_IF
+
+// Angle speed calculation
+fOmegaMechNoDirection := 2.0 * PI * ( UDINT_TO_LREAL( stInputs.nEL5101_Frequency ) / fPpr * fFreqScale );
+
+// Outputs
+fThetaMech	:= fTheta;
+fOmegaMech 	:= fRotationDirection * fOmegaMechNoDirection;]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
-      <LineId Id="74" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="102" Count="0" />
+      <LineId Id="952" Count="0" />
+      <LineId Id="864" Count="1" />
+      <LineId Id="909" Count="0" />
+      <LineId Id="866" Count="0" />
+      <LineId Id="868" Count="2" />
+      <LineId Id="880" Count="0" />
+      <LineId Id="910" Count="0" />
+      <LineId Id="908" Count="0" />
+      <LineId Id="881" Count="0" />
+      <LineId Id="938" Count="0" />
+      <LineId Id="936" Count="0" />
+      <LineId Id="947" Count="0" />
+      <LineId Id="949" Count="0" />
+      <LineId Id="937" Count="0" />
+      <LineId Id="939" Count="1" />
+      <LineId Id="882" Count="1" />
+      <LineId Id="919" Count="0" />
+      <LineId Id="950" Count="0" />
+      <LineId Id="913" Count="5" />
+      <LineId Id="911" Count="0" />
+      <LineId Id="951" Count="0" />
+      <LineId Id="930" Count="0" />
+      <LineId Id="935" Count="0" />
+      <LineId Id="931" Count="0" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="943" Count="3" />
+      <LineId Id="942" Count="0" />
+      <LineId Id="912" Count="0" />
+      <LineId Id="953" Count="0" />
+      <LineId Id="898" Count="1" />
+      <LineId Id="954" Count="0" />
+      <LineId Id="907" Count="0" />
+      <LineId Id="906" Count="0" />
+      <LineId Id="900" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -14,7 +14,7 @@ STRUCT
 	// CAN
 	Outputs					AT %Q*				: CANTXQUEUESTRUCT_N_1;
 	// Encoder
-	uEL5101_SetCounterValue AT %Q*				: UINT;
+	nEL5101_SetCounterValue AT %Q*				: UINT;
 	bEL5101_SetCounter		AT %Q*				: BIT;
 	bEL5101_EnabledLatch	AT %Q*				: BIT;
 END_STRUCT

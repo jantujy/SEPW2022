@@ -4,18 +4,19 @@
     <Declaration><![CDATA[TYPE ST_Inputs :
 STRUCT
 	// CAN
-	Inputs 				AT %I*			: CANRXQUEUESTRUCT_N_1;
+	Inputs 				AT %I*	: CANRXQUEUESTRUCT_N_1;
 	
 	// IO
-	uEL3702Ch1_In 		AT %I*	: INT;
-	uEL3702Ch2_In 		AT %I*	: INT;
-	uEL3702Ch3_In 		AT %I*	: INT;
+	nEL3702Ch1_In 		AT %I*	: INT;
+	nEL3702Ch2_In 		AT %I*	: INT;
+	nEL3702Ch3_In 		AT %I*	: INT;
 	
 	// Encoder
-	uEL5101_Counter 	AT %I*	: UINT;
+	nEL5101_Counter 	AT %I*	: UINT;
 	bEL5101_CounterSet	AT %I*	: BIT;
-	uEL5101_LatchValue	AT %I*	: UINT;
-	uEL5101_Frequency	AT %I*	: UDINT;
+	nEL5101_LatchValue	AT %I*	: UINT;
+	nEL5101_Frequency	AT %I*	: UDINT;
+	bEL5101_LatchValid	AT %I*	: BIT;
 	
 	// From controller
 	fAlpha_U, fBeta_U	AT %I*	: LREAL;

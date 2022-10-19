@@ -20,7 +20,37 @@
               <Children />
             </Node>
             <Node>
-              <Title>uEL5101_Frequency</Title>
+              <Title>fOmegaMechNoDirection</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>fTheta</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>fThetaMech</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>fThetaPrev</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>nThetaDelta</Title>
+              <Expanded>False</Expanded>
+              <FileName></FileName>
+              <Children />
+            </Node>
+            <Node>
+              <Title>nThetaDeltaPrev</Title>
               <Expanded>False</Expanded>
               <FileName></FileName>
               <Children />
@@ -33,12 +63,30 @@
           <FileName></FileName>
           <Children>
             <Node>
-              <Title>Axis Group (1)</Title>
+              <Title>Axis Group</Title>
               <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
-                  <Title>fOmegaMech</Title>
+                  <Title>fTheta</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+                <Node>
+                  <Title>fThetaPrev</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+                <Node>
+                  <Title>nThetaDelta</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+                <Node>
+                  <Title>nThetaDeltaPrev</Title>
                   <Expanded>False</Expanded>
                   <FileName></FileName>
                   <Children />
@@ -53,12 +101,38 @@
           <FileName></FileName>
           <Children>
             <Node>
+              <Title>Axis Group (1)</Title>
+              <Expanded>True</Expanded>
+              <FileName></FileName>
+              <Children>
+                <Node>
+                  <Title>fOmegaMechNoDirection</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+                <Node>
+                  <Title>fOmegaMech</Title>
+                  <Expanded>False</Expanded>
+                  <FileName></FileName>
+                  <Children />
+                </Node>
+              </Children>
+            </Node>
+          </Children>
+        </Node>
+        <Node>
+          <Title>YT Chart (2)</Title>
+          <Expanded>True</Expanded>
+          <FileName></FileName>
+          <Children>
+            <Node>
               <Title>Axis Group (2)</Title>
               <Expanded>True</Expanded>
               <FileName></FileName>
               <Children>
                 <Node>
-                  <Title>uEL5101_Frequency</Title>
+                  <Title>fThetaMech</Title>
                   <Expanded>False</Expanded>
                   <FileName></FileName>
                   <Children />
