@@ -2133,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{31EE7DF6-37EF-1B83-BD77-37E033F26CAD}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{9B2949C0-5552-B999-2857-36378595A11B}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2195,10 +2195,6 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.fWel</Name>
-							<Type>LREAL</Type>
-						</Var>
-						<Var>
 							<Name>MAIN.stOutputs.fWmech</Name>
 							<Type>LREAL</Type>
 						</Var>
@@ -2215,11 +2211,7 @@
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
-							<Name>MAIN.stOutputs.fThetaEl</Name>
-							<Type>LREAL</Type>
-						</Var>
-						<Var>
-							<Name>MAIN.stOutputs.fThetaMech</Name>
+							<Name>MAIN.stOutputs.fTheta</Name>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
@@ -2310,6 +2302,13 @@
 						<OwnerA Name="InputDst" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="1">
 							<OwnerB Name="TIID^Device 2 (EtherCAT)^Term 8 (EK1100)^Term 9 (EL5101-0010)">
 								<Link VarA="MAIN.stInputs.uEL5101_CounterSet" TypeA="BIT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000010}" VarB="ENC Status compact^Status^Set counter done" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2022-11-16T10:43:30">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^EngineControlSystem^EngineControlSystem Instance" Type="2">
+							<OwnerB Name="TIRC^TcCOM Objects^Object2 (controller_21_1_2022)">
+								<Link VarA="MAIN.stOutputs.fThetaMech" TypeA="LREAL" InOutA="1" GuidA="{18071995-0000-0000-0000-00000000000E}" VarB="Input^theta_m" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -4811,7 +4810,7 @@ Slave-Mode:
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIa" VarB="Input^i_abc[0]"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIb" VarB="Input^i_abc[1]"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIc" VarB="Input^i_abc[2]"/>
-				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fThetaMech" VarB="Input^theta_m"/>
+				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fTheta" VarB="Input^theta_m"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fWmech" VarB="Input^w_actual_rad_m"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fWref" VarB="Input^w_ref_rpm"/>
 			</OwnerB>
