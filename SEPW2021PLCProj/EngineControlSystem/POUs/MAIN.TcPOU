@@ -4,25 +4,23 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	// To controller
-	fWRefPrep								: LREAL := 0;
+	fWRefPrep								: LREAL;
 	
-	fThetaOl								: REAL := 0;
-	
-	// Encoder
-	bHomingDoneEncoder						: BOOL;
-	nEncoderOffset							: UINT;
-	
-	fCurrentMeasurement_V					: REAL; // Current measurement as voltage
-	fCurrent_I								: REAL; // Current as A
-	fMotorSpeed								: REAL;
-	fThetaOut, fThetaElOut, fOmegaOut	 	: REAL;
+	fThetaOl								: REAL;
 	
 	fVa, fVb								: REAL;
 	
-	bControlEnable							: BOOL := FALSE;
-	bstartHoming							: BOOL := FALSE;
-	bOpenLoop 								: BOOL := FALSE;
-	bHomingDone 							: BOOL := FALSE;
+	bZeroingDone							: BOOL;
+	tpIdRun									: TP;
+	tpZeroingWaitTime						: TP;
+	tZeroingWaitTime						: TIME := T#1S;
+	tIdTime									: TIME := T#5S;
+	fElZeroAngle							: LREAL;
+	
+	bControlEnable							: BOOL;
+	bStartHoming							: BOOL;
+	bOpenLoop 								: BOOL;
+	bHomingDone 							: BOOL;
 	fHomingVa								: REAL := 0.5;
 	fHomingVb								: REAL := 0;
 	
@@ -33,57 +31,70 @@ VAR
 	stOutputs								: ST_Outputs;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-//control_enable := 0;
+      <ST><![CDATA[fbEncoder(	stInputs	:= stInputs,
+			stOutputs	:= stOutputs,
+			fThetaMech 	=> stOutputs.fTheta,
+			fOmegaMech 	=> stOutputs.fWmech
+);
+
+// Zero pulse location zeroing
+IF NOT bZeroingDone THEN
+	stOutputs.bEL5101_EnabledLatch := TRUE;
+	
+		fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
+							Outputs := stOutputs.Outputs, 
+							fVoltage_A := SIN(fThetaOl),
+							fVoltage_B := COS(fThetaOl));
+		
+		fThetaOl := fThetaOl + 2 * LREAL_TO_REAL( PI ) / 2500;
+		IF fThetaOl > 2 * PI THEN
+			fThetaOl := 0;
+		END_IF
+	
+	IF stInputs.bEL5101_LatchValid THEN
+		stOutputs.nEL5101_SetCounterValue := stInputs.nEL5101_LatchValue;
+		stOutputs.bEL5101_SetCounter := TRUE;
+		bZeroingDone := stInputs.bEL5101_CounterSet;
+		stOutputs.bEL5101_EnabledLatch := FALSE;
+		bStartHoming := TRUE;
+	END_IF
+END_IF
+
+tpZeroingWaitTime( IN := bStartHoming, PT := tZeroingWaitTime );
+
+IF bStartHoming AND NOT bHomingDone AND NOT tpZeroingWaitTime.Q THEN
+	tpIdRun( IN := bStartHoming, PT := tIdTime );
+	stOutputs.fControlEnable := 0;
+	fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
+						Outputs := stOutputs.Outputs, 
+						fVoltage_A := fHomingVa,
+						fVoltage_B := fHomingVb);
+	
+	IF NOT tpIdRun.Q THEN
+		fElZeroAngle := fbEncoder.fThetaMech;
+		bHomingDone := TRUE;
+	END_IF
+END_IF
+
 IF bControlEnable THEN
 	stOutputs.fControlEnable := 1;
 ELSE	
 	stOutputs.fControlEnable := 0;
 END_IF 
 
-stOutputs.fWref := fWRefPrep * 2;
+stOutputs.fWref := fWRefPrep;
+
+stOutputs.fTheta := fbEncoder.fThetaMech - fElZeroAngle;
+stOutputs.fWmech := fbEncoder.fOmegaMech;
 
 stOutputs.fIa := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch1_In));
 stOutputs.fIb := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch2_In));
 stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch3_In));
 
-//IF ( Measurements.COUNTER_VALUE > Constants.PULSES_PER_REV ) AND (EL5101_CounterSetWORD.2 = FALSE) THEN
-//	EL5101_CounterSet := Constants.PULSES_PER_REV - (16#FFFF - Measurements.COUNTER_VALUE);
-//	EL5101_CounterSetWORD.2 := TRUE;
-//ELSE
-//	EL5101_CounterSetWORD.2 := FALSE;
-//END_IF
-
-fbEncoder(	stInputs	:= stInputs,
-			stOutputs	:= stOutputs,
-			fThetaMech 	=> stOutputs.fThetaMech,
-			fOmegaMech 	=> stOutputs.fWmech
-);
-			
 fVa := LREAL_TO_REAL(stInputs.fAlpha_U);
 fVb := LREAL_TO_REAL(stInputs.fBeta_U);
 
-IF bStartHoming AND ( NOT bHomingDone ) THEN
-	stOutputs.fControlEnable := 0;
-	//fbHomingTimer(DONE => homingDone);
-	fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
-						Outputs := stOutputs.Outputs, 
-						fVoltage_A := fHomingVa,
-						fVoltage_B := fHomingVb);
-						
-	nEncoderOffset := stInputs.nEL5101_Counter;
-	stOutputs.nEL5101_SetCounterValue := nEncoderOffset;
-	stOutputs.bEL5101_SetCounter := TRUE;
-	
-	IF stInputs.bEL5101_CounterSet THEN
-		bHomingDone := TRUE;
-		stOutputs.bEL5101_SetCounter := FALSE;
-	END_IF
-END_IF
-
-IF ( NOT bStartHoming ) AND bHomingDone THEN
-	bHomingDoneEncoder := TRUE;
-	
+IF bHomingDone THEN
 	IF bControlEnable THEN
 		fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
 							Outputs := stOutputs.Outputs, 
@@ -100,21 +111,48 @@ IF ( NOT bStartHoming ) AND bHomingDone THEN
 			fThetaOl := 0;
 		END_IF
 	END_IF
-	
-(*	
-ELSE
-	fbCAN_MessageHandler(	Inputs := Inputs, 
-						Outputs := Outputs, 
-						fVoltage_A := homingVa,
-						fVoltage_B := homingVb);
-	EL5101_CounterSet := 0;*)
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="775" Count="21" />
+      <LineId Id="796" Count="0" />
       <LineId Id="879" Count="0" />
       <LineId Id="878" Count="0" />
-      <LineId Id="797" Count="50" />
+      <LineId Id="797" Count="1" />
+      <LineId Id="1086" Count="0" />
+      <LineId Id="1062" Count="0" />
+      <LineId Id="1078" Count="0" />
+      <LineId Id="1064" Count="0" />
+      <LineId Id="1097" Count="0" />
+      <LineId Id="1099" Count="7" />
+      <LineId Id="1087" Count="0" />
+      <LineId Id="1096" Count="0" />
+      <LineId Id="1066" Count="3" />
+      <LineId Id="1098" Count="0" />
+      <LineId Id="1137" Count="0" />
+      <LineId Id="1070" Count="0" />
+      <LineId Id="952" Count="0" />
+      <LineId Id="1151" Count="1" />
+      <LineId Id="802" Count="1" />
+      <LineId Id="986" Count="0" />
+      <LineId Id="804" Count="0" />
+      <LineId Id="806" Count="2" />
+      <LineId Id="1127" Count="0" />
+      <LineId Id="989" Count="0" />
+      <LineId Id="987" Count="0" />
+      <LineId Id="1133" Count="0" />
+      <LineId Id="992" Count="0" />
+      <LineId Id="914" Count="0" />
+      <LineId Id="819" Count="0" />
+      <LineId Id="1155" Count="7" />
+      <LineId Id="1170" Count="0" />
+      <LineId Id="1169" Count="0" />
+      <LineId Id="1171" Count="0" />
+      <LineId Id="1163" Count="2" />
+      <LineId Id="1154" Count="0" />
+      <LineId Id="1167" Count="1" />
+      <LineId Id="1166" Count="0" />
+      <LineId Id="820" Count="1" />
+      <LineId Id="824" Count="15" />
       <LineId Id="164" Count="0" />
     </LineIds>
   </POU>

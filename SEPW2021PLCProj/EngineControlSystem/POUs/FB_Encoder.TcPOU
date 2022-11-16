@@ -26,18 +26,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Zero pulse location zeroing
-IF NOT bInit THEN
-	stOutputs.bEL5101_EnabledLatch := TRUE;
-	
-	IF stInputs.bEL5101_LatchValid THEN
-		stOutputs.nEL5101_SetCounterValue := stInputs.nEL5101_LatchValue;
-		stOutputs.bEL5101_SetCounter := TRUE;
-		bInit := stInputs.bEL5101_CounterSet;
-	END_IF
-	
-	stOutputs.bEL5101_EnabledLatch := FALSE;
-END_IF
+      <ST><![CDATA[
 
 // Angle calculation
 nCounter		:= stInputs.nEL5101_Counter * 4;
@@ -76,14 +65,6 @@ fThetaMech	:= fTheta;
 fOmegaMech 	:= fRotationDirection * fOmegaMechNoDirection;]]></ST>
     </Implementation>
     <LineIds Name="FB_Encoder">
-      <LineId Id="952" Count="0" />
-      <LineId Id="864" Count="1" />
-      <LineId Id="909" Count="0" />
-      <LineId Id="866" Count="0" />
-      <LineId Id="868" Count="2" />
-      <LineId Id="880" Count="0" />
-      <LineId Id="910" Count="0" />
-      <LineId Id="908" Count="0" />
       <LineId Id="881" Count="0" />
       <LineId Id="938" Count="0" />
       <LineId Id="936" Count="0" />
