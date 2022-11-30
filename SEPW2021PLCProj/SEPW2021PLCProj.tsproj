@@ -2133,7 +2133,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{A72F6723-6EEF-43CB-A88B-3C30005B2BB5}" Name="EngineControlSystem" PrjFilePath="EngineControlSystem\EngineControlSystem.plcproj" TmcFilePath="EngineControlSystem\EngineControlSystem.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{9B2949C0-5552-B999-2857-36378595A11B}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="EngineControlSystem\EngineControlSystem.tmc" TmcHash="{5CF245F6-DDBB-5CC7-F842-D96DC62541C6}">
 					<Name>EngineControlSystem Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -2184,6 +2184,14 @@
 						</Var>
 						<Var>
 							<Name>MAIN.stInputs.fBeta_U</Name>
+							<Type>LREAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.iQ</Name>
+							<Type>LREAL</Type>
+						</Var>
+						<Var>
+							<Name>MAIN.stInputs.iD</Name>
 							<Type>LREAL</Type>
 						</Var>
 					</Vars>
@@ -4806,6 +4814,8 @@ Slave-Mode:
 			<OwnerB Name="TIRC^TcCOM Objects^Object2 (controller_21_1_2022)">
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.fAlpha_U" VarB="Output^U_alpha_beta[0]"/>
 				<Link VarA="PlcTask Inputs^MAIN.stInputs.fBeta_U" VarB="Output^U_alpha_beta[1]"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.iD" VarB="Output^I_dq[0]"/>
+				<Link VarA="PlcTask Inputs^MAIN.stInputs.iQ" VarB="Output^I_dq[1]"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fControlEnable" VarB="Input^enable"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIa" VarB="Input^i_abc[0]"/>
 				<Link VarA="PlcTask Outputs^MAIN.stOutputs.fIb" VarB="Input^i_abc[1]"/>

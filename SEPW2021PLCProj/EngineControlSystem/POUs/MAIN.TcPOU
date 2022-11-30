@@ -4,6 +4,7 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	// To controller
+	bInit									: BOOL;
 	fWRefPrep								: LREAL;
 	
 	fThetaOl								: REAL;
@@ -27,17 +28,20 @@ VAR
 	fbCAN_MessageHandler					: FB_CANMessageHandler();
 	fbEncoder								: FB_Encoder();
 	
+	fbController							: FB_Controller();
+	
 	stInputs								: ST_Inputs;
 	stOutputs								: ST_Outputs;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[fbEncoder(	stInputs	:= stInputs,
+      <ST><![CDATA[// Calling encoder and getting outputs and giving inputs
+fbEncoder(	stInputs	:= stInputs,
 			stOutputs	:= stOutputs,
 			fThetaMech 	=> stOutputs.fTheta,
 			fOmegaMech 	=> stOutputs.fWmech
 );
 
-// Zero pulse location zeroing
+// Id run to zero pulse location aka latch
 IF NOT bZeroingDone THEN
 	stOutputs.bEL5101_EnabledLatch := TRUE;
 	
@@ -62,6 +66,7 @@ END_IF
 
 tpZeroingWaitTime( IN := bStartHoming, PT := tZeroingWaitTime );
 
+// Homing
 IF bStartHoming AND NOT bHomingDone AND NOT tpZeroingWaitTime.Q THEN
 	tpIdRun( IN := bStartHoming, PT := tIdTime );
 	stOutputs.fControlEnable := 0;
@@ -76,26 +81,40 @@ IF bStartHoming AND NOT bHomingDone AND NOT tpZeroingWaitTime.Q THEN
 	END_IF
 END_IF
 
+// Enabling for old controller
 IF bControlEnable THEN
 	stOutputs.fControlEnable := 1;
 ELSE	
 	stOutputs.fControlEnable := 0;
 END_IF 
 
-stOutputs.fWref := fWRefPrep;
+// Getting controller outputs and giving inputs
+fbController.speedrefrpm := fWRefPrep;
 
-stOutputs.fTheta := fbEncoder.fThetaMech - fElZeroAngle;
-stOutputs.fWmech := fbEncoder.fOmegaMech;
+fbController.anglerad := -1 * ( fbEncoder.fThetaMech - fElZeroAngle );
+// Multiplying the mechanical speed with number of pole pairs gives us the electrical field rotation speed
+fbController.speedmeasrad := -1 * fbEncoder.fOmegaMech * 2;
 
-stOutputs.fIa := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch1_In));
-stOutputs.fIb := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch2_In));
-stOutputs.fIc := F_VoltageToCurrentConvert(F_AnalogIntToVoltage(stInputs.nEL3702Ch3_In));
+fbController.Current_abc[0] := stInputs.nEL3702Ch1_In;
+fbController.Current_abc[1] := stInputs.nEL3702Ch2_In;
+fbController.Current_abc[2] := stInputs.nEL3702Ch3_In;
 
-fVa := LREAL_TO_REAL(stInputs.fAlpha_U);
-fVb := LREAL_TO_REAL(stInputs.fBeta_U);
+// Controller init
+IF NOT bInit THEN
+	fbController( ssMethodType := SS_INITIALIZE );
+	bInit := TRUE;
+END_IF
 
+// Scaling of 0.9 used because svpwm doesnt like full 1 and the scaling in controller uses 400 V which is also the saturation point
+fVa := LREAL_TO_REAL(fbController.Voltageoutalphabeta[0] * 0.9);
+fVb := LREAL_TO_REAL(fbController.Voltageoutalphabeta[1] * 0.9);
+
+// Enabling controller or open loop
 IF bHomingDone THEN
 	IF bControlEnable THEN
+		IF bInit THEN
+			fbController( ssMethodType := SS_STEP );
+		END_IF
 		fbCAN_MessageHandler(Inputs := stInputs.Inputs, 
 							Outputs := stOutputs.Outputs, 
 							fVoltage_A := fVa,
@@ -114,6 +133,7 @@ IF bHomingDone THEN
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="1257" Count="0" />
       <LineId Id="796" Count="0" />
       <LineId Id="879" Count="0" />
       <LineId Id="878" Count="0" />
@@ -132,6 +152,7 @@ END_IF]]></ST>
       <LineId Id="1070" Count="0" />
       <LineId Id="952" Count="0" />
       <LineId Id="1151" Count="1" />
+      <LineId Id="1258" Count="0" />
       <LineId Id="802" Count="1" />
       <LineId Id="986" Count="0" />
       <LineId Id="804" Count="0" />
@@ -143,16 +164,30 @@ END_IF]]></ST>
       <LineId Id="992" Count="0" />
       <LineId Id="914" Count="0" />
       <LineId Id="819" Count="0" />
-      <LineId Id="1155" Count="7" />
+      <LineId Id="1259" Count="0" />
+      <LineId Id="1155" Count="5" />
+      <LineId Id="1260" Count="0" />
+      <LineId Id="1161" Count="1" />
       <LineId Id="1170" Count="0" />
       <LineId Id="1169" Count="0" />
+      <LineId Id="1263" Count="0" />
       <LineId Id="1171" Count="0" />
       <LineId Id="1163" Count="2" />
       <LineId Id="1154" Count="0" />
+      <LineId Id="1204" Count="0" />
+      <LineId Id="1210" Count="0" />
+      <LineId Id="1208" Count="0" />
+      <LineId Id="1213" Count="1" />
+      <LineId Id="1212" Count="0" />
+      <LineId Id="1262" Count="0" />
       <LineId Id="1167" Count="1" />
       <LineId Id="1166" Count="0" />
+      <LineId Id="1261" Count="0" />
       <LineId Id="820" Count="1" />
-      <LineId Id="824" Count="15" />
+      <LineId Id="824" Count="0" />
+      <LineId Id="1253" Count="0" />
+      <LineId Id="1255" Count="1" />
+      <LineId Id="825" Count="14" />
       <LineId Id="164" Count="0" />
     </LineIds>
   </POU>
